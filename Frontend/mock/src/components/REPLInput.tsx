@@ -80,7 +80,7 @@ export function REPLInput(props: REPLInputProps) {
           "command function for command: " + commandArgs[0] + "is undefined"
         ]);
       } else {
-        commandFunction(commandArgs);
+        commandFunction(commandArgs).then(r =>);
       }
     }
     // if user is trying to use an invalid command
@@ -115,7 +115,7 @@ export function REPLInput(props: REPLInputProps) {
       default:
         props.setHistory([
           ...props.history,
-          commandString +" does not exist, try either mode brief or mode verbose",
+          commandString + " does not exist, try either mode brief or mode verbose",
         ]);
         break;
     }
