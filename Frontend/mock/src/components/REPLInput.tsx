@@ -248,34 +248,34 @@ export function REPLInput(props: REPLInputProps) {
     }
   }
 
-  /**
-   * handles invalid command,
-   * describes a list of valid commands
-   * @param commandString
-   */
-  function handleError(commandString: string) {
-    let outputMsg =
-      "Command " +
-      commandString +
-      " not recognized, try load_file <csv-file-path>, view, search <column> <value> or mode <mode>";
-    switch (mode) {
-      case Mode.Brief:
-        props.setHistory([...props.history, outputMsg]);
-        break;
-      case Mode.Verbose:
-        props.setHistory([
-          ...props.history,
-          "Command: " + commandString + " \n Output: " + outputMsg,
-        ]);
-        break;
-    }
-  }
+  // /**
+  //  * handles invalid command,
+  //  * describes a list of valid commands
+  //  * @param commandString
+  //  */
+  // function handleError(commandString: string) {
+  //   let outputMsg =
+  //     "Command " +
+  //     commandString +
+  //     " not recognized, try load_file <csv-file-path>, view, search <column> <value> or mode <mode>";
+  //   switch (mode) {
+  //     case Mode.Brief:
+  //       props.setHistory([...props.history, outputMsg]);
+  //       break;
+  //     case Mode.Verbose:
+  //       props.setHistory([
+  //         ...props.history,
+  //         "Command: " + commandString + " \n Output: " + outputMsg,
+  //       ]);
+  //       break;
+  //   }
+  // }
 
   const possibleCommands: Map<string, REPLFunction> = new Map([
-    ["handleLoad", handleLoad],
-    // ["handleView", handleView],
-    // ["handleSearch", handleSearch],
-    // ["handleMode", handleMode]
+    ["load_file", handleLoad],
+    // ["view", handleView],
+    // ["search", handleSearch],
+    // ["mode", handleMode]
   ]);
 
   return (
