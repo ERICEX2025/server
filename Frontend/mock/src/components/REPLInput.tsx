@@ -1,11 +1,18 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useState, useRef } from "react";
 import { Mode } from "../enums";
 import { ControlledInput } from "./ControlledInput";
 import { loadcsv, viewcsv, searchcsv } from "./mockedJson";
 
 /**
+ * repl interface for the functions of the registered commands
+ */
+export interface REPLFunction {
+  (args: Array<string>): Promise<string>;
+}
+
+/**
  * REPL Input component is in charge of dealing with everything
- * related to the inputs, accepts input commands and handles them 
+ * related to the inputs, accepts input commands and handles them
  * accordingly, updating the history state for REPLHistory
  * to display
  */
@@ -18,33 +25,88 @@ interface REPLInputProps {
  * main high level logic function for REPLInput
  * parses the commandString the user types through
  * the controlled input and submission from button
- * based on the command, directs concern to that 
- * command's handler, lastly refreshes the command 
+ * based on the command, directs concern to that
+ * command's handler, lastly refreshes the command
  * str input state
- * @param props 
- * @returns 
+ * @param props
+ * @returns
  */
 export function REPLInput(props: REPLInputProps) {
   const [commandString, setCommandString] = useState<string>("");
   const [mode, setMode] = useState<Mode>(Mode.Brief);
+  // used to contain the current registered commands
+  // useRef hook since the dynamic array is only used for logic and not state
+  const registeredCommands = useRef<string[]>([]);
 
   function handleSubmit(commandString: string) {
     const commandArgs = commandString.split(" ");
+    setCommandString("");
 
-    if (commandArgs[0] == "mode") {
-      handleMode(commandString);
-    } else if (commandArgs[0] == "load_file") {
-      handleLoad(commandString);
-    } else if (commandArgs[0] == "view") {
-      handleView(commandString);
-    } else if (commandArgs[0] == "search") {
-      handleSearch(commandString);
-    } else {
-      handleError(commandString);
+    if (commandArgs.length === 0) {
+      return;
     }
 
-    setCommandString("");
+    // Removes the first element from commandArgs and returns the first element
+    const firstInput = commandArgs.shift();
+
+    // check this
+    if (firstInput === undefined) {
+      return;
+    }
+
+    // first check if user is trying to register a command
+    if (firstInput === "register") {
+      if (commandArgs.length === 0) {
+        props.setHistory(["please enter a command to register"]);
+      }
+      // then if the command is already registered
+      else if (registeredCommands.current.includes(commandArgs[0])) {
+        // command already exists
+        props.setHistory(["command: " + commandArgs[0] + " already exists!"]);
+      } else {
+        // if so check if the command is a possible commands to register
+        if (possibleCommands.has(commandArgs[0])) {
+          // if it is, then register the command
+          registeredCommands.current.push(commandArgs[0]);
+          props.setHistory(["command: " + commandArgs[0] + " registered"]);
+        } else {
+          // if the command is not a possible command to register
+          props.setHistory([
+            "command: " +
+              commandArgs[0] +
+              " not a possible command to register",
+          ]);
+        }
+      }
+    }
+    // if user is trying to use a command
+    else if (registeredCommands.current.includes(firstInput)) {
+      // Retrieve and call the function
+      const commandFunction = possibleCommands.get(firstInput);
+      // notify the web developer that the function of this command
+      // is initialized to undefined in the possibleCommands Map
+      if (commandFunction === undefined) {
+        props.setHistory([
+          "command function for command: " + commandArgs[0] + "is undefined",
+        ]);
+      } else {
+        commandFunction(commandArgs)
+          .then((result) => {
+            console.log(result), props.setHistory([...props.history, result]);
+          })
+          .catch((error) => {
+            props.setHistory([...props.history, "sad"]);
+          });
+      }
+    }
+    // if user is trying to use an invalid command
+    else {
+      props.setHistory([
+        "command: " + commandArgs[0] + " is not one of the registered commands",
+      ]);
+    }
   }
+
   /**
    * handles mode by parsing the string
    * setting enum mode state variable
@@ -68,7 +130,8 @@ export function REPLInput(props: REPLInputProps) {
       default:
         props.setHistory([
           ...props.history,
-          commandString +" does not exist, try either mode brief or mode verbose",
+          commandString +
+            " does not exist, try either mode brief or mode verbose",
         ]);
         break;
     }
@@ -79,27 +142,47 @@ export function REPLInput(props: REPLInputProps) {
    * backend through loadcsv
    * @param commandString
    */
-  function handleLoad(commandString: string) {
-    const commandArgs = commandString.split(" ");
-    let outputMsg;
-    if (commandArgs.length != 2) {
-      outputMsg =
-        "Please provide 1 argument for load: load_file <csv-file-path>";
-    } else {
-      outputMsg = loadcsv(commandArgs[1]);
+  const handleLoad: REPLFunction = async (args: Array<string>) => {
+    const commandArgs = args;
+    console.log(args);
+    const queryFilePath = commandArgs[0];
+    const queryHeaders = commandArgs[1];
+
+    console.log("qfp: " + queryFilePath);
+    console.log("qh: " + queryHeaders);
+
+    const response = await fetch(
+      "http://localhost:3434/loadcsv?filepath=" +
+        queryFilePath +
+        "&hasHeaders=" +
+        queryHeaders
+    );
+    const responseJson = await response.json();
+    const response_type = await responseJson.response_type;
+    const filepath = await responseJson.filepath;
+    if (response_type.includes("error")) {
+      return response_type + " filepath: " + filepath;
     }
-    switch (mode) {
-      case Mode.Verbose:
-        props.setHistory([
-          ...props.history,
-          "Command: " + commandString + " \n Output: " + outputMsg,
-        ]);
-        break;
-      case Mode.Brief:
-        props.setHistory([...props.history, outputMsg]);
-        break;
-    }
-  }
+    return "successfully loaded " + filepath;
+
+    // if (commandArgs.length != 2) {
+    //   outputMsg =
+    //     "Please provide 1 argument for load: load_file <csv-file-path>";
+    // } else {
+    //   outputMsg = loadcsv(commandArgs[1]);
+    // }
+    // switch (mode) {
+    //   case Mode.Verbose:
+    //     props.setHistory([
+    //       ...props.history,
+    //       "Command: " + commandString + " \n Output: " + outputMsg,
+    //     ]);
+    //     break;
+    //   case Mode.Brief:
+    //     props.setHistory([...props.history, outputMsg]);
+    //     break;
+    // }
+  };
   /**
    * handles view case after error handling,
    * sends the inputted request to the mocked
@@ -175,26 +258,35 @@ export function REPLInput(props: REPLInputProps) {
     }
   }
 
-  /**
-   * handles invalid command,
-   * describes a list of valid commands
-   * @param commandString
-   */
-  function handleError(commandString: string) {
-    let outputMsg =
-      "Command " + commandString + " not recognized, try load_file <csv-file-path>, view, search <column> <value> or mode <mode>";
-    switch (mode) {
-      case Mode.Brief:
-        props.setHistory([...props.history, outputMsg]);
-        break;
-      case Mode.Verbose:
-        props.setHistory([
-          ...props.history,
-          "Command: " + commandString + " \n Output: " + outputMsg,
-        ]);
-        break;
-    }
-  }
+  // /**
+  //  * handles invalid command,
+  //  * describes a list of valid commands
+  //  * @param commandString
+  //  */
+  // function handleError(commandString: string) {
+  //   let outputMsg =
+  //     "Command " +
+  //     commandString +
+  //     " not recognized, try load_file <csv-file-path>, view, search <column> <value> or mode <mode>";
+  //   switch (mode) {
+  //     case Mode.Brief:
+  //       props.setHistory([...props.history, outputMsg]);
+  //       break;
+  //     case Mode.Verbose:
+  //       props.setHistory([
+  //         ...props.history,
+  //         "Command: " + commandString + " \n Output: " + outputMsg,
+  //       ]);
+  //       break;
+  //   }
+  // }
+
+  const possibleCommands: Map<string, REPLFunction> = new Map([
+    ["load_file", handleLoad],
+    // ["view", handleView],
+    // ["search", handleSearch],
+    // ["mode", handleMode]
+  ]);
 
   return (
     <div className="REPL-input">
