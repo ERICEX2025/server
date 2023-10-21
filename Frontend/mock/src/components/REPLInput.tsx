@@ -12,7 +12,7 @@ export interface REPLFunction {
 
 /**
  * REPL Input component is in charge of dealing with everything
- * related to the inputs, accepts input commands and handles them 
+ * related to the inputs, accepts input commands and handles them
  * accordingly, updating the history state for REPLHistory
  * to display
  */
@@ -25,25 +25,34 @@ interface REPLInputProps {
  * main high level logic function for REPLInput
  * parses the commandString the user types through
  * the controlled input and submission from button
- * based on the command, directs concern to that 
- * command's handler, lastly refreshes the command 
+ * based on the command, directs concern to that
+ * command's handler, lastly refreshes the command
  * str input state
- * @param props 
- * @returns 
+ * @param props
+ * @returns
  */
 export function REPLInput(props: REPLInputProps) {
   const [commandString, setCommandString] = useState<string>("");
   const [mode, setMode] = useState<Mode>(Mode.Brief);
   // used to contain the current registered commands
-  // useRef hook since the dynamic array is only used for logic and not state 
+  // useRef hook since the dynamic array is only used for logic and not state
   const registeredCommands = useRef<string[]>([]);
 
   function handleSubmit(commandString: string) {
     const commandArgs = commandString.split(" ");
     setCommandString("");
 
+    if (commandArgs.length === 0) {
+      return;
+    }
+
     // Removes the first element from commandArgs and returns the first element
     const firstInput = commandArgs.shift();
+
+    // check this
+    if (firstInput === undefined) {
+      return;
+    }
 
     // first check if user is trying to register a command
     if (firstInput === "register") {
@@ -54,8 +63,7 @@ export function REPLInput(props: REPLInputProps) {
       else if (registeredCommands.current.includes(commandArgs[0])) {
         // command already exists
         props.setHistory(["command: " + commandArgs[0] + " already exists!"]);
-      } 
-      else {
+      } else {
         // if so check if the command is a possible commands to register
         if (possibleCommands.has(commandArgs[0])) {
           // if it is, then register the command
@@ -64,33 +72,34 @@ export function REPLInput(props: REPLInputProps) {
         } else {
           // if the command is not a possible command to register
           props.setHistory([
-            "command: " + commandArgs[0] + " not a possible command to register"
+            "command: " +
+              commandArgs[0] +
+              " not a possible command to register",
           ]);
         }
       }
     }
     // if user is trying to use a command
-    else if (registeredCommands.current.includes(commandArgs[0])) {
+    else if (registeredCommands.current.includes(firstInput)) {
       // Retrieve and call the function
-      const commandFunction = possibleCommands.get(commandArgs[0]);
+      const commandFunction = possibleCommands.get(firstInput);
       // notify the web developer that the function of this command
       // is initialized to undefined in the possibleCommands Map
       if (commandFunction === undefined) {
         props.setHistory([
-          "command function for command: " + commandArgs[0] + "is undefined"
+          "command function for command: " + commandArgs[0] + "is undefined",
         ]);
       } else {
         commandFunction(commandArgs);
       }
     }
     // if user is trying to use an invalid command
-    else{
+    else {
       props.setHistory([
-        "command: " + commandArgs[0] + " is not one of the registered commands"
+        "command: " + commandArgs[0] + " is not one of the registered commands",
       ]);
     }
-  } 
-  
+  }
 
   /**
    * handles mode by parsing the string
@@ -115,7 +124,8 @@ export function REPLInput(props: REPLInputProps) {
       default:
         props.setHistory([
           ...props.history,
-          commandString +" does not exist, try either mode brief or mode verbose",
+          commandString +
+            " does not exist, try either mode brief or mode verbose",
         ]);
         break;
     }
@@ -127,33 +137,42 @@ export function REPLInput(props: REPLInputProps) {
    * @param commandString
    */
   const handleLoad: REPLFunction = async (args: Array<string>) => {
-   const commandArgs = commandString.split(" ");
-   let outputMsg;
-   if (commandArgs.length != 2) {
-     outputMsg =
-      "Please provide 1 argument for load: load_file <csv-file-path>";
-   } else {
-     outputMsg = loadcsv(commandArgs[1]);
-   }
-   switch (mode) {
-     case Mode.Verbose:
-       props.setHistory([
-         ...props.history,
-         "Command: " + commandString + " \n Output: " + outputMsg,
-       ]);
-       break;
-     case Mode.Brief:
-       props.setHistory([...props.history, outputMsg]);
-       break;
-   }
-   return new Promise<string>((resolve, reject) => {
-     // Implement your function logic here.
-     // You can access the command arguments in the 'args' array.
+    const commandArgs = commandString.split(" ");
+    let outputMsg;
 
-     // For example, let's say we return a simple message.
-     resolve(`Arguments received: ${args.join(", ")}`);
-   });
- };
+    const response = await fetch(
+      "http://localhost:3434/loadcsv?filepath=stars/ten-star.csv&hasHeaders=true"
+    );
+    const responseJson = await response.json();
+    console.log(responseJson);
+
+    props.setHistory([...props.history, JSON.stringify(responseJson)]);
+
+    // if (commandArgs.length != 2) {
+    //   outputMsg =
+    //     "Please provide 1 argument for load: load_file <csv-file-path>";
+    // } else {
+    //   outputMsg = loadcsv(commandArgs[1]);
+    // }
+    // switch (mode) {
+    //   case Mode.Verbose:
+    //     props.setHistory([
+    //       ...props.history,
+    //       "Command: " + commandString + " \n Output: " + outputMsg,
+    //     ]);
+    //     break;
+    //   case Mode.Brief:
+    //     props.setHistory([...props.history, outputMsg]);
+    //     break;
+    // }
+    return new Promise<string>((resolve, reject) => {
+      // Implement your function logic here.
+      // You can access the command arguments in the 'args' array.
+
+      // For example, let's say we return a simple message.
+      resolve(`Arguments received: ${args.join(", ")}`);
+    });
+  };
   /**
    * handles view case after error handling,
    * sends the inputted request to the mocked
@@ -236,7 +255,9 @@ export function REPLInput(props: REPLInputProps) {
    */
   function handleError(commandString: string) {
     let outputMsg =
-      "Command " + commandString + " not recognized, try load_file <csv-file-path>, view, search <column> <value> or mode <mode>";
+      "Command " +
+      commandString +
+      " not recognized, try load_file <csv-file-path>, view, search <column> <value> or mode <mode>";
     switch (mode) {
       case Mode.Brief:
         props.setHistory([...props.history, outputMsg]);
@@ -256,7 +277,6 @@ export function REPLInput(props: REPLInputProps) {
     // ["handleSearch", handleSearch],
     // ["handleMode", handleMode]
   ]);
-
 
   return (
     <div className="REPL-input">
