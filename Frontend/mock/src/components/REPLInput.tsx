@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction, useState, useRef } from "react";
 import { Mode } from "../enums";
 import { ControlledInput } from "./ControlledInput";
+import { stringify } from "querystring";
 
 /**
  * repl interface for the functions of the registered commands
@@ -142,22 +143,16 @@ export function REPLInput(props: REPLInputProps) {
    */
   const handleLoad: REPLFunction = async (args: Array<string>) => {
     const commandArgs = args;
-    console.log(args);
     const queryFilePath = commandArgs[0];
-    const queryHeaders = commandArgs[1];
-
-    console.log("qfp: " + queryFilePath);
-    console.log("qh: " + queryHeaders);
 
     const response = await fetch(
-      "http://localhost:3434/loadcsv?filepath=" +
-        queryFilePath +
-        "&hasHeaders=" +
-        queryHeaders
+      "http://localhost:3232/loadcsv?filepath=" + queryFilePath
     );
     const responseJson = await response.json();
-    const response_type = responseJson.response_type;
-    const filepath = responseJson.filepath;
+    const response_type = responseJson.result;
+    const filepath = responseJson.csvfile;
+
+
     if (response_type.includes("error")) {
       return response_type + " filepath: " + filepath;
     }
@@ -189,18 +184,18 @@ export function REPLInput(props: REPLInputProps) {
    */
   const handleView: REPLFunction = async (args: Array<string>) => {
 
-    const response = await fetch(
-      "http://localhost:3434/viewcsv"
-    );
-    const responseJson = await response.json();
-    const response_type = responseJson.response_type;
-    const data = responseJson.data;
-    if (response_type.includes("error")) {
-      return response_type + " filepath: " + filepath;
-    }
-    else{
-      return h"successfully loaded " + filepat;
-    }
+    // const response = await fetch(
+    //   "http://localhost:3434/viewcsv"
+    // );
+    // const responseJson = await response.json();
+    // const response_type = responseJson.response_type;
+    // const data = responseJson.data;
+    // if (response_type.includes("error")) {
+    //   return response_type + " filepath: " + filepath;
+    // }
+    // else{
+    //   return h"successfully loaded " + filepat;
+    // }
     // const commandArgs = commandString.split(" ");
     // let outputMsg: string | string[][];
     // if (commandArgs.length > 1) {
