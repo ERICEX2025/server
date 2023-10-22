@@ -232,68 +232,60 @@ export function REPLInput(props: REPLInputProps) {
    * backend through searchcsv
    * @param commandString
    */
-  function handleSearch(commandString: string) {
-    // const commandArgs = commandString.split(" ");
-    // let outputMsg: string | string[][];
-    // let column = "";
-    // let value = "";
-    // let hasHeader = "";
-    // if (commandArgs.length > 4) {
-    //   outputMsg = "please give a max of 3 arguments for search.";
-    // } else if (commandArgs.length < 2) {
-    //   outputMsg =
-    //     "please provide a search term and optional column identifier for search.";
-    // } else {
-    //   value = commandArgs[1];
-    //   if (commandArgs.length == 4) {
-    //     column = commandArgs[1];
-    //     value = commandArgs[2];
-    //     hasHeader = commandArgs[3];
-    //   }
-    //   if (commandArgs.length == 3) {
-    //     column = commandArgs[1];
-    //     value = commandArgs[2];
-    //   }
-    //   outputMsg = searchcsv(column, value, hasHeader);
-    // }
-    // switch (mode) {
-    //   case Mode.Verbose:
-    //     props.setHistory((prevHistory) => [
-    //       ...prevHistory,
-    //       "Command: " + commandString + "\n Output: ",
-    //     ]);
+  const handleSearch: REPLFunction = async (args: Array<string>) => {
+    const commandArgs = splitSpacesExcludeQuotes(commandString);
 
-    //     props.setHistory((prevHistory) => [...prevHistory, outputMsg]);
-    //     break;
+    const queryTerm = commandArgs[0];
+    const queryHeaders = commandArgs[1];
 
-    //   case Mode.Brief:
-    //     props.setHistory([...props.history, outputMsg]);
-    //     break;
-    // }
+    if (commandArgs.length == 3) {
+      const queryID = commandArgs[2];
+      const response = await fetch(
+        "http://localhost:3232/searchcsv?term=" +
+          queryTerm +
+          "&hasheader=" +
+          queryHeaders +
+          "&identifier=" +
+          queryID
+      );
+      const responseJson = await response.json();
+      const response_type = responseJson.status;
+      const filepath = responseJson.csvfile;
+      if (response_type.includes("error")) {
+        return response_type + " filepath: " + filepath;
+      }
+    } else if (commandArgs.length == 2) {
+      const response = await fetch(
+        "http://localhost:3232/searchcsv?term=" +
+          queryTerm +
+          "&hasheader=" +
+          queryHeaders
+      );
+      const responseJson = await response.json();
+      const response_type = responseJson.status;
+      const filepath = responseJson.csvfile;
+      if (response_type.includes("error")) {
+        return response_type + " filepath: " + filepath;
+      }
+    } else {
+      const response = await fetch(
+        "http://localhost:3232/searchcsv?term=" +
+          queryTerm +
+          "&hasheader=" +
+          queryHeaders
+      );
+      const responseJson = await response.json();
+      const status = responseJson.status;
+      const filepath = responseJson.csvfile;
+      if (status.includes("error")) {
+        return status;
+      }
+    }
+
+    // const responseJson = await response.json();
+    // const response_type = responseJson.result;
+    // const filepath = responseJson.csvfile;
   }
-
-  // /**
-  //  * handles invalid command,
-  //  * describes a list of valid commands
-  //  * @param commandString
-  //  */
-  // function handleError(commandString: string) {
-  //   let outputMsg =
-  //     "Command " +
-  //     commandString +
-  //     " not recognized, try load_file <csv-file-path>, view, search <column> <value> or mode <mode>";
-  //   switch (mode) {
-  //     case Mode.Brief:
-  //       props.setHistory([...props.history, outputMsg]);
-  //       break;
-  //     case Mode.Verbose:
-  //       props.setHistory([
-  //         ...props.history,
-  //         "Command: " + commandString + " \n Output: " + outputMsg,
-  //       ]);
-  //       break;
-  //   }
-  // }
 
   const possibleCommands: Map<string, REPLFunction> = new Map([
     ["load_file", handleLoad],
