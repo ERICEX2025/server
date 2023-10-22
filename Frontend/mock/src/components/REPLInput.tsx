@@ -40,11 +40,11 @@ export function REPLInput(props: REPLInputProps) {
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault(); // Prevent the default form submission behavior
-   
+
     const commandArgs = splitSpacesExcludeQuotes(commandString);
     setCommandString("");
 
-    if (commandArgs.length === 0) {
+    if (commandArgs.length == 0) {
       return;
     }
 
@@ -128,28 +128,19 @@ export function REPLInput(props: REPLInputProps) {
    * mode, handles error case
    * @param commandString
    */
-  function handleMode(commandString: string) {
-    switch (commandString) {
-      case "mode verbose":
+  const handleMode: REPLFunction = async (args: Array<string>) => {
+    switch (args[0]) {
+      case "verbose":
         setMode(Mode.Verbose);
-        props.setHistory([
-          ...props.history,
-          "Command: " + commandString + " \n Output: " + "mode set to verbose",
-        ]);
-        break;
-      case "mode brief":
+        return "Command: " + commandString + " \n Output: mode set to verbose";
+      case "brief":
         setMode(Mode.Brief);
-        props.setHistory([...props.history, "mode set to brief"]);
-        break;
+        return "mode set to brief";
       default:
-        props.setHistory([
-          ...props.history,
-          commandString +
-            " does not exist, try either mode brief or mode verbose",
-        ]);
-        break;
+        return commandString + " does not exist, try either 'mode brief' or 'mode verbose."
+
     }
-  }
+  };
   /**
    * handles load case after error handling,
    * sends the inputted request to the mocked
@@ -165,7 +156,8 @@ export function REPLInput(props: REPLInputProps) {
     );
     const responseJson = await response.json();
     const response_type = responseJson.result;
-
+    
+    
     if (response_type.includes("error")) {
       return response_type + " filepath: " + queryFilePath;
     }
@@ -237,20 +229,27 @@ export function REPLInput(props: REPLInputProps) {
   const handleSearch: REPLFunction = async (args: Array<string>) => {
     const commandArgs = args;
     if (commandArgs.length >= 4) {
-      return "It seems like you're trying to enter more than 3 search params. If your identifier or search term have multiple words, wrap them in quotes."
+      return "It seems like you're trying to enter more than 3 search params. If your identifier or search term have multiple words, wrap them in quotes.";
     }
 
-    let urlToSearch = "http://localhost:3232/searchcsv"
+    let urlToSearch = "http://localhost:3232/searchcsv";
     const numQueryParams = commandArgs.length;
     switch (numQueryParams) {
       case 1:
         urlToSearch += "?term=" + commandArgs[0];
         break;
       case 2:
-        urlToSearch += "?term=" + commandArgs[0]+"&hasheader="+commandArgs[1];
+        urlToSearch +=
+          "?term=" + commandArgs[0] + "&hasheader=" + commandArgs[1];
         break;
       case 3:
-        urlToSearch += "?term=" + commandArgs[0]+"&hasheader="+commandArgs[1]+"&identifier=" +commandArgs[2];
+        urlToSearch +=
+          "?term=" +
+          commandArgs[0] +
+          "&hasheader=" +
+          commandArgs[1] +
+          "&identifier=" +
+          commandArgs[2];
         break;
       default:
         break;
@@ -261,82 +260,23 @@ export function REPLInput(props: REPLInputProps) {
     if (result.includes("error")) {
       return result;
     }
-    const data = responseJson.data;
-    return data;
+    return responseJson.data;
+  };
 
-
-
-    // in all other cases, we can attempt to search
-    const queryTerm = commandArgs[0];
-    const queryHeaders = commandArgs[1];
-
-    if (commandArgs.length == 3) { // all three params
-      const queryID = commandArgs[2];
-      const response = await fetch(
-        "http://localhost:3232/searchcsv?term=" +
-          queryTerm +
-          "&hasheader=" +
-          queryHeaders +
-          "&identifier=" +
-          queryID
-      );
-      const responseJson = await response.json();
-      const result = responseJson.result;
-      const data = responseJson.data;
-      console.log("3 response: " + result);
-      if (result.includes("error")) {
-        return result + " data: " + data;
-      } else {
-        
-        return result + data;
-      }
-    } else if (commandArgs.length == 2) {
-      console.log("qTerm: " + queryTerm);
-      console.log("qHead: " + queryHeaders);
-      const response = await fetch(
-        "http://localhost:3232/searchcsv?term=" +
-          queryTerm +
-          "&hasheader=" +
-          queryHeaders
-      );
-      const responseJson = await response.json();
-      const result = responseJson.result;
-      const data = responseJson.data;
-      console.log("rahh response: " + result);
-      if (result.includes("error")) {
-        return "result: " + result + " data: " + data;
-      } else {
-        console.log(data);
-
-        return data;
-      }
-    } else {
-      const response = await fetch(
-        "http://localhost:3232/searchcsv?term=" +
-          queryTerm +
-          "&hasheader=" +
-          queryHeaders
-      );
-      const responseJson = await response.json();
-      const status = responseJson.status;
-      console.log("2 response: " + status);
-
-      const filepath = responseJson.csvfile;
-      if (status.includes("error")) {
-        return status;
-      }
-    }
-
-    // const responseJson = await response.json();
-    // const response_type = responseJson.result;
-    // const filepath = responseJson.csvfile;
+  /**
+   * Example function that could be hardcoded by a developer stakeholder
+   * to register for their own use.
+   */
+  const handleAdd2And2: REPLFunction = async (args: Array<string>) => {
+    return String(2 + 2);
   };
 
   const possibleCommands: Map<string, REPLFunction> = new Map([
     ["load_file", handleLoad],
     ["view", handleView],
     ["search", handleSearch],
-    // ["mode", handleMode]
+    ["mode", handleMode],
+    ["add2and2", handleAdd2And2],
   ]);
 
   return (
@@ -367,4 +307,3 @@ export function REPLInput(props: REPLInputProps) {
     </div>
   );
 }
-
