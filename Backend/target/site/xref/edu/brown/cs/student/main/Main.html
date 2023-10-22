@@ -8,111 +8,59 @@
 <div id="overview"><a href="../../../../../../apidocs/edu/brown/cs/student/main/Main.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <strong class="jxr_keyword">package</strong> edu.brown.cs.student.main;
 <a class="jxr_linenumber" name="L2" href="#L2">2</a>   
-<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <strong class="jxr_keyword">import</strong> java.io.*;
-<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <strong class="jxr_keyword">import</strong> java.util.*;
-<a class="jxr_linenumber" name="L5" href="#L5">5</a>   
-<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_javadoccomment">/** The Main class of our project. This is where execution begins. */</em>
-<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> <a name="Main" href="../../../../../edu/brown/cs/student/main/Main.html#Main">Main</a> {
-<a class="jxr_linenumber" name="L8" href="#L8">8</a>   
-<a class="jxr_linenumber" name="L9" href="#L9">9</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_javadoccomment">   * The initial method called when execution begins.</em>
-<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_javadoccomment">   *</em>
-<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_javadoccomment">   * @param args An array of command line arguments</em>
-<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L14" href="#L14">14</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> main(String[] args) {
-<a class="jxr_linenumber" name="L15" href="#L15">15</a>      <strong class="jxr_keyword">new</strong> <a name="Main" href="../../../../../edu/brown/cs/student/main/Main.html#Main">Main</a>(args).run();
-<a class="jxr_linenumber" name="L16" href="#L16">16</a>    }
-<a class="jxr_linenumber" name="L17" href="#L17">17</a>  
-<a class="jxr_linenumber" name="L18" href="#L18">18</a>    <strong class="jxr_keyword">private</strong> <a name="Main" href="../../../../../edu/brown/cs/student/main/Main.html#Main">Main</a>(String[] args) {}
-<a class="jxr_linenumber" name="L19" href="#L19">19</a>  
-<a class="jxr_linenumber" name="L20" href="#L20">20</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> run() {
-<a class="jxr_linenumber" name="L21" href="#L21">21</a>      Scanner myScanner = <strong class="jxr_keyword">new</strong> Scanner(System.in);
-<a class="jxr_linenumber" name="L22" href="#L22">22</a>  
-<a class="jxr_linenumber" name="L23" href="#L23">23</a>      System.out.println(<span class="jxr_string">"Please input filepath to csv:"</span>);
-<a class="jxr_linenumber" name="L24" href="#L24">24</a>      String filepath = myScanner.nextLine(); <em class="jxr_comment">// Read user input for csv filepath</em>
-<a class="jxr_linenumber" name="L25" href="#L25">25</a>  
-<a class="jxr_linenumber" name="L26" href="#L26">26</a>      System.out.println(<span class="jxr_string">"Please input (T/F) is csv has headers:"</span>);
-<a class="jxr_linenumber" name="L27" href="#L27">27</a>      String headers = myScanner.nextLine(); <em class="jxr_comment">// Read user input for if csv has headers</em>
-<a class="jxr_linenumber" name="L28" href="#L28">28</a>      Boolean h = <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="L29" href="#L29">29</a>      <strong class="jxr_keyword">if</strong> (headers.equalsIgnoreCase(<span class="jxr_string">"T"</span>)) {
-<a class="jxr_linenumber" name="L30" href="#L30">30</a>        h = <strong class="jxr_keyword">true</strong>;
-<a class="jxr_linenumber" name="L31" href="#L31">31</a>      } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (headers.equalsIgnoreCase(<span class="jxr_string">"F"</span>)) {
-<a class="jxr_linenumber" name="L32" href="#L32">32</a>        h = false;
-<a class="jxr_linenumber" name="L33" href="#L33">33</a>      } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L34" href="#L34">34</a>        <em class="jxr_comment">// terminate program if invalid input</em>
-<a class="jxr_linenumber" name="L35" href="#L35">35</a>        System.err.println(<span class="jxr_string">"Invalid input"</span>);
-<a class="jxr_linenumber" name="L36" href="#L36">36</a>        System.exit(1);
-<a class="jxr_linenumber" name="L37" href="#L37">37</a>      }
-<a class="jxr_linenumber" name="L38" href="#L38">38</a>  
-<a class="jxr_linenumber" name="L39" href="#L39">39</a>      <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L40" href="#L40">40</a>        <em class="jxr_comment">// parse can use user's own Reader object, the default is a BufferedReader object</em>
-<a class="jxr_linenumber" name="L41" href="#L41">41</a>        BufferedReader bf = <strong class="jxr_keyword">new</strong> BufferedReader(<strong class="jxr_keyword">new</strong> FileReader(filepath));
-<a class="jxr_linenumber" name="L42" href="#L42">42</a>        <em class="jxr_comment">// parse can use user's own CreatorFromRow object, the default is a StringCreator object</em>
-<a class="jxr_linenumber" name="L43" href="#L43">43</a>        <a name="StringCreator" href="../../../../../edu/brown/cs/student/ma<a name="StringCreator" href="../../../../../edu/brown/cs/student/main/StringCreator.html#StringCreator">StringCreator</a>tor.html#StringCreator">StringCreator</a> strCreator = <strong class="jxr_keyword">new</strong> <a name="StringCreator" href="../../../../../edu/brown/cs/student/main/StringCreator.html#StringCreator">StringCreator</a>();
-<a class="jxr_linenumber" name="L44" href="#L44">44</a>        <a name="Parser" href="../../../../../edu/brown/cs/s<a name="Parser" href="../../../../../edu/brown/cs/student/main/Parser.html#Parser">Parser</a>/main/Parser.html#Parser">Parser</a> p = <strong class="jxr_keyword">new</strong> <a name="Parser" href="../../../../../edu/brown/cs/student/main/Parser.html#Parser">Parser</a>(strCreator, bf);
-<a class="jxr_linenumber" name="L45" href="#L45">45</a>        <a name="Searcher" href="../../../../../edu/brown/cs/s<a name="Searcher" href="../../../../../edu/brown/cs/student/main/Searcher.html#Searcher">Searcher</a>ain/Searcher.html#Searcher">Searcher</a> s = <strong class="jxr_keyword">new</strong> <a name="Searcher" href="../../../../../edu/brown/cs/student/main/Searcher.html#Searcher">Searcher</a>(p, h);
-<a class="jxr_linenumber" name="L46" href="#L46">46</a>  
-<a class="jxr_linenumber" name="L47" href="#L47">47</a>        System.out.println(<span class="jxr_string">"Please input a value to search for:"</span>);
-<a class="jxr_linenumber" name="L48" href="#L48">48</a>        String searchVal = myScanner.nextLine(); <em class="jxr_comment">// Read user input for search value</em>
-<a class="jxr_linenumber" name="L49" href="#L49">49</a>  
-<a class="jxr_linenumber" name="L50" href="#L50">50</a>        System.out.println(
-<a class="jxr_linenumber" name="L51" href="#L51">51</a>            <span class="jxr_string">"Please input a column identifier option. If you would like to search by column name, "</span>
-<a class="jxr_linenumber" name="L52" href="#L52">52</a>                + <span class="jxr_string">"input \&quot;name\&quot;. \nIf you would like to search by column index (with 0 being the leftmost "</span>
-<a class="jxr_linenumber" name="L53" href="#L53">53</a>                + <span class="jxr_string">"column), input \&quot;index\&quot;. \nIf you would like to search all columns, input \&quot;all\&quot;."</span>);
-<a class="jxr_linenumber" name="L54" href="#L54">54</a>        String colIdentifierOpt = myScanner.nextLine(); <em class="jxr_comment">// Read user input for how to search</em>
-<a class="jxr_linenumber" name="L55" href="#L55">55</a>  
-<a class="jxr_linenumber" name="L56" href="#L56">56</a>        <strong class="jxr_keyword">if</strong> (colIdentifierOpt.equalsIgnoreCase(<span class="jxr_string">"name"</span>)) {
-<a class="jxr_linenumber" name="L57" href="#L57">57</a>          System.out.println(<span class="jxr_string">"Please input a column name to search in:"</span>);
-<a class="jxr_linenumber" name="L58" href="#L58">58</a>          <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L59" href="#L59">59</a>            String colName = myScanner.nextLine(); <em class="jxr_comment">// Read user input for column name to search in</em>
-<a class="jxr_linenumber" name="L60" href="#L60">60</a>            List&lt;String&gt; results = s.searchByColName(searchVal, colName);
-<a class="jxr_linenumber" name="L61" href="#L61">61</a>            System.out.println(results);
-<a class="jxr_linenumber" name="L62" href="#L62">62</a>          } <strong class="jxr_keyword">catch</strong> (Exception e) {
-<a class="jxr_linenumber" name="L63" href="#L63">63</a>            <em class="jxr_comment">// terminate program if invalid input and print appropriate message</em>
-<a class="jxr_linenumber" name="L64" href="#L64">64</a>            System.err.println(e.getMessage());
-<a class="jxr_linenumber" name="L65" href="#L65">65</a>            System.exit(1);
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>          }
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>  
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>        } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (colIdentifierOpt.equalsIgnoreCase(<span class="jxr_string">"index"</span>)) {
-<a class="jxr_linenumber" name="L69" href="#L69">69</a>          System.out.println(<span class="jxr_string">"Please input a column index to search in (starts with 0):"</span>);
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>          <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>            <strong class="jxr_keyword">int</strong> colIndex = myScanner.nextInt(); <em class="jxr_comment">// Read user input for column index to search in</em>
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>            List&lt;String&gt; results = s.searchByColIndex(searchVal, colIndex);
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>            System.out.println(results);
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>          } <strong class="jxr_keyword">catch</strong> (Exception e) {
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>            <em class="jxr_comment">// terminate program if invalid input and print appropriate message</em>
-<a class="jxr_linenumber" name="L76" href="#L76">76</a>            System.err.println(e.getMessage());
-<a class="jxr_linenumber" name="L77" href="#L77">77</a>            System.exit(1);
-<a class="jxr_linenumber" name="L78" href="#L78">78</a>          }
-<a class="jxr_linenumber" name="L79" href="#L79">79</a>  
-<a class="jxr_linenumber" name="L80" href="#L80">80</a>        } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (colIdentifierOpt.equalsIgnoreCase(<span class="jxr_string">"all"</span>)) {
-<a class="jxr_linenumber" name="L81" href="#L81">81</a>          <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L82" href="#L82">82</a>            List&lt;String&gt; results = s.searchAllCol(searchVal); <em class="jxr_comment">// searches all columns for value</em>
-<a class="jxr_linenumber" name="L83" href="#L83">83</a>            System.out.println(results);
-<a class="jxr_linenumber" name="L84" href="#L84">84</a>          } <strong class="jxr_keyword">catch</strong> (Exception e) {
-<a class="jxr_linenumber" name="L85" href="#L85">85</a>            <em class="jxr_comment">// terminate program if invalid input and print appropriate message</em>
-<a class="jxr_linenumber" name="L86" href="#L86">86</a>            System.err.println(e.getMessage());
-<a class="jxr_linenumber" name="L87" href="#L87">87</a>            System.exit(1);
-<a class="jxr_linenumber" name="L88" href="#L88">88</a>          }
-<a class="jxr_linenumber" name="L89" href="#L89">89</a>        } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L90" href="#L90">90</a>          <em class="jxr_comment">// terminate program if invalid input</em>
-<a class="jxr_linenumber" name="L91" href="#L91">91</a>          System.err.println(<span class="jxr_string">"Invalid input for column identifier."</span>);
-<a class="jxr_linenumber" name="L92" href="#L92">92</a>          System.exit(1);
-<a class="jxr_linenumber" name="L93" href="#L93">93</a>        }
-<a class="jxr_linenumber" name="L94" href="#L94">94</a>  
-<a class="jxr_linenumber" name="L95" href="#L95">95</a>      }
-<a class="jxr_linenumber" name="L96" href="#L96">96</a>      <em class="jxr_comment">// catches error in filepath thrown by reader</em>
-<a class="jxr_linenumber" name="L97" href="#L97">97</a>      <strong class="jxr_keyword">catch</strong> (FileNotFoundException e) {
-<a class="jxr_linenumber" name="L98" href="#L98">98</a>        System.err.println(<span class="jxr_string">"File not found error!"</span>);
-<a class="jxr_linenumber" name="L99" href="#L99">99</a>        System.exit(1);
-<a class="jxr_linenumber" name="L100" href="#L100">100</a>     }
-<a class="jxr_linenumber" name="L101" href="#L101">101</a>     <em class="jxr_comment">// catches error in reading file by parser</em>
-<a class="jxr_linenumber" name="L102" href="#L102">102</a>     <strong class="jxr_keyword">catch</strong> (IOException e) {
-<a class="jxr_linenumber" name="L103" href="#L103">103</a>       System.err.println(<span class="jxr_string">"Error occurred in reading file!"</span>);
-<a class="jxr_linenumber" name="L104" href="#L104">104</a>       System.exit(1);
-<a class="jxr_linenumber" name="L105" href="#L105">105</a>     }
-<a class="jxr_linenumber" name="L106" href="#L106">106</a>   }
-<a class="jxr_linenumber" name="L107" href="#L107">107</a> }
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <strong class="jxr_keyword">import</strong> edu.brown.cs.student.main.CSV.CSVParser;
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <strong class="jxr_keyword">import</strong> edu.brown.cs.student.main.CSV.CSVSearcher;
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <strong class="jxr_keyword">import</strong> edu.brown.cs.student.main.DataObject.CreatorFromRow;
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <strong class="jxr_keyword">import</strong> edu.brown.cs.student.main.DataObject.FactoryFailureException;
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <strong class="jxr_keyword">import</strong> edu.brown.cs.student.main.DataObject.StringList;
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <strong class="jxr_keyword">import</strong> java.io.FileReader;
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <strong class="jxr_keyword">import</strong> java.io.IOException;
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <strong class="jxr_keyword">import</strong> java.util.List;
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> <a name="Main" href="../../../../../edu/brown/cs/student/main/Main.html#Main">Main</a> {
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>    <strong class="jxr_keyword">private</strong> String[] args;
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>    <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <em class="jxr_javadoccomment">   * @param args An array of command line arguments &lt;filename&gt; &lt;search term&gt; &lt;has headers?&gt;</em>
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <em class="jxr_javadoccomment">   *     &lt;optional column index/name&gt; example input: ./data/census/postsecondary_education.csv Women</em>
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <em class="jxr_javadoccomment">   *     true 8</em>
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> main(String[] args) <strong class="jxr_keyword">throws</strong> IOException, <a name="FactoryFailureException" href="../../../../../edu/brown/cs/student/main/DataObject/FactoryFailureException.html#FactoryFailureException">FactoryFailureException</a> {
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>      <strong class="jxr_keyword">if</strong> (args.length &gt; 4 || args.length &lt; 3) {
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>        <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>            <span class="jxr_string">"Invalid number of arguments. Expected &lt;filename&gt; &lt;search term&gt; &lt;has headers?&gt; "</span>
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>                + <span class="jxr_string">"and optionally &lt;column index/name&gt;."</span>);
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>      }
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>      <strong class="jxr_keyword">new</strong> <a name="Main" href="../../../../../edu/brown/cs/student/main/Main.html#Main">Main</a>(args).run();
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>    }
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>    <strong class="jxr_keyword">private</strong> <a name="Main" href="../../../../../edu/brown/cs/student/main/Main.html#Main">Main</a>(String[] args) {
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>      <strong class="jxr_keyword">this</strong>.args = args;
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>    }
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> run() <strong class="jxr_keyword">throws</strong> IOException, <a name="FactoryFailureException" href="../../../../../edu/brown/cs/student/main/DataObject/FactoryFailureException.html#FactoryFailureException">FactoryFailureException</a> {
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>      <em class="jxr_comment">// dear student: you can remove this. you can remove anything. you're in cs32. you're free!</em>
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>      <em class="jxr_comment">// what if I don't want to remove this. I want to include this message as a feature &gt;:D</em>
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>      <em class="jxr_comment">//    System.out.println(</em>
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>      <em class="jxr_comment">//        "Your horoscope for this project:\n"</em>
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>      <em class="jxr_comment">//            + "Entrust in the Strategy pattern, and it shall give thee the sovereignty to "</em>
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>      <em class="jxr_comment">//            + "decide and the dexterity to change direction in the realm of thy code.");</em>
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>  
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>      CreatorFromRow&lt;List&lt;String&gt;&gt; stringList = <strong class="jxr_keyword">new</strong> <a name="StringList" href="../../../../../edu/brown/cs/student/main/DataObject/StringList.html#StringList">StringList</a>();
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>      FileReader fileReader = <strong class="jxr_keyword">new</strong> FileReader(args[0]);
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>      String searchTerm = args[1];
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>      Boolean hasHeaders = Boolean.parseBoolean(args[2]);
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>      String columnIdentifier = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>      <strong class="jxr_keyword">if</strong> (args.length == 4) {
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>        columnIdentifier = args[3];
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>      }
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>  
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>      <em class="jxr_comment">// parse this file and create a list of stringLists</em>
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>      <a name="CSVParser" href="../../../../../edu/brown/cs/studen<a name="CSVParser" href="../../../../../edu/brown/cs/student/main/CSV/CSVParser.html#CSVParser">CSVParser</a>V/CSVParser.html#CSVParser">CSVParser</a> parser = <strong class="jxr_keyword">new</strong> <a name="CSVParser" href="../../../../../edu/brown/cs/student/main/CSV/CSVParser.html#CSVParser">CSVParser</a>(fileReader, stringList);
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>      <a name="CSVSearcher" href="../../../../../edu/brown/cs/student/<a name="CSVSearcher" href="../../../../../edu/brown/cs/student/main/CSV/CSVSearcher.html#CSVSearcher">CSVSearcher</a>VSearcher.html#CSVSearcher">CSVSearcher</a> searcher = <strong class="jxr_keyword">new</strong> <a name="CSVSearcher" href="../../../../../edu/brown/cs/student/main/CSV/CSVSearcher.html#CSVSearcher">CSVSearcher</a>(parser, searchTerm, hasHeaders, columnIdentifier);
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>    }
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>  }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2023. All rights reserved.</div>

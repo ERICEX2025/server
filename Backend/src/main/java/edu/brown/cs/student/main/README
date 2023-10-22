@@ -1,0 +1,61 @@
+README
+
+Sprint 2- Server
+
+Pair Programmed:
+https://github.com/cs0320-f23/server-ryane008-ERICEX2025
+Eric Ko - eko10
+Ryan Eng - reng1
+
+Project Description:
+We have four endpoints in this WebAPI. The loadcsv, viewcsv, searchcsv, and broadband endpoints
+We satisfy the following User Stories
+
+User Story 1 (Front-End Developer Stakeholder)
+Mesh Network Community Coalition: "As a developer calling your web API, I can make API requests to
+load, view, or search the contents of a CSV file by calling the `loadcsv`, `viewcsv` or `searchcsv`
+endpoints. For `loadcsv`, I will provide the path of the CSV file to load (on the backend)."
+
+User Story 2 (Front-End Developer Stakeholder)
+Mesh Network Community Coalition: "As a developer calling your web API, I can retrieve the
+percentage of households with broadband access for a target location by providing the name of the
+target state and county in my request." (For our purposes in this sprint, we will say that
+“broadband access” and “high-speed internet” are the same thing.)
+
+How to use endpoints:
+
+loadcsv - ex. http://localhost:3232/loadcsv?filepath=ri_income.csv"
+param is filepath= inputted csvdata
+
+viewcsv - ex. http://localhost:3232/viewcsv"
+no params
+
+searchcsv - ex. http://localhost:3232/searchcsv?term=Rhode+Island&hasheader=false&identifier=0
+*third parameter is optional*
+params are term= inputted term, hasheader= inputted boolean,
+identifier= inputted identifier
+
+broadband - ex. http://localhost:3232/broadband?state=California&county=Kings+County
+*county parameter is optional* make sure to use + for spaces
+params are state= inputted state, county= inputted county
+
+Design choices:
+
+We have a high level server class that runs main.
+This server class contains our 4 endpoints and shares state variables through the design choice of
+static variables and static getter and setter methods
+
+The loadcsv, viewcsv,and searchcsv endpoints use the shared static variable parsedLoadedCSV and
+getter/setter methods to load, view, and search the csvfile.
+
+The broadband endpoint uses the static variable stateCode to store the stateCode mappings,
+preventing redundant "state to stateCode" queries to the census API
+
+We return the required json map<String, Object> type for all our API outputs.
+
+Include the total estimated time it took to complete project
+30
+
+Errors/Bugs
+None
+

@@ -1,7 +1,6 @@
 import { Dispatch, SetStateAction, useState, useRef } from "react";
 import { Mode } from "../enums";
 import { ControlledInput } from "./ControlledInput";
-import { loadcsv, viewcsv, searchcsv } from "./mockedJson";
 
 /**
  * repl interface for the functions of the registered commands
@@ -90,9 +89,6 @@ export function REPLInput(props: REPLInputProps) {
           "command function for command: " + commandArgs[0] + "is undefined",
         ]);
       } else {
-<<<<<<< HEAD
-        commandFunction(commandArgs).then(r =>);
-=======
         commandFunction(commandArgs)
           .then((result) => {
             console.log(result), props.setHistory([...props.history, result]);
@@ -100,7 +96,6 @@ export function REPLInput(props: REPLInputProps) {
           .catch((error) => {
             props.setHistory([...props.history, "sad"]);
           });
->>>>>>> ed078c3015a79267b54f57eea8acb4444127ee23
       }
     }
     // if user is trying to use an invalid command
@@ -161,13 +156,13 @@ export function REPLInput(props: REPLInputProps) {
         queryHeaders
     );
     const responseJson = await response.json();
-    const response_type = await responseJson.response_type;
-    const filepath = await responseJson.filepath;
+    const response_type = responseJson.response_type;
+    const filepath = responseJson.filepath;
     if (response_type.includes("error")) {
       return response_type + " filepath: " + filepath;
     }
     return "successfully loaded " + filepath;
-
+  
     // if (commandArgs.length != 2) {
     //   outputMsg =
     //     "Please provide 1 argument for load: load_file <csv-file-path>";
@@ -192,27 +187,40 @@ export function REPLInput(props: REPLInputProps) {
    * backend through viewcsv
    * @param commandString
    */
-  function handleView(commandString: string) {
-    const commandArgs = commandString.split(" ");
-    let outputMsg: string | string[][];
-    if (commandArgs.length > 1) {
-      outputMsg = "view does not take any arguments!";
-    } else {
-      outputMsg = viewcsv();
-    }
-    switch (mode) {
-      case Mode.Verbose:
-        props.setHistory((prevHistory) => [
-          ...prevHistory,
-          "Command: " + commandString + "\n Output: ",
-        ]);
-        props.setHistory((prevHistory) => [...prevHistory, outputMsg]);
-        break;
+  const handleView: REPLFunction = async (args: Array<string>) => {
 
-      case Mode.Brief:
-        props.setHistory([...props.history, outputMsg]);
-        break;
+    const response = await fetch(
+      "http://localhost:3434/viewcsv"
+    );
+    const responseJson = await response.json();
+    const response_type = responseJson.response_type;
+    const data = responseJson.data;
+    if (response_type.includes("error")) {
+      return response_type + " filepath: " + filepath;
     }
+    else{
+      return h"successfully loaded " + filepat;
+    }
+    // const commandArgs = commandString.split(" ");
+    // let outputMsg: string | string[][];
+    // if (commandArgs.length > 1) {
+    //   outputMsg = "view does not take any arguments!";
+    // } else {
+    //   outputMsg = viewcsv();
+    // }
+    // switch (mode) {
+    //   case Mode.Verbose:
+    //     props.setHistory((prevHistory) => [
+    //       ...prevHistory,
+    //       "Command: " + commandString + "\n Output: ",
+    //     ]);
+    //     props.setHistory((prevHistory) => [...prevHistory, outputMsg]);
+    //     break;
+
+    //   case Mode.Brief:
+    //     props.setHistory([...props.history, outputMsg]);
+    //     break;
+    // }
   }
 
   /**
@@ -222,43 +230,43 @@ export function REPLInput(props: REPLInputProps) {
    * @param commandString
    */
   function handleSearch(commandString: string) {
-    const commandArgs = commandString.split(" ");
-    let outputMsg: string | string[][];
-    let column = "";
-    let value = "";
-    let hasHeader = "";
-    if (commandArgs.length > 4) {
-      outputMsg = "please give a max of 3 arguments for search.";
-    } else if (commandArgs.length < 2) {
-      outputMsg =
-        "please provide a search term and optional column identifier for search.";
-    } else {
-      value = commandArgs[1];
-      if (commandArgs.length == 4) {
-        column = commandArgs[1];
-        value = commandArgs[2];
-        hasHeader = commandArgs[3];
-      }
-      if (commandArgs.length == 3) {
-        column = commandArgs[1];
-        value = commandArgs[2];
-      }
-      outputMsg = searchcsv(column, value, hasHeader);
-    }
-    switch (mode) {
-      case Mode.Verbose:
-        props.setHistory((prevHistory) => [
-          ...prevHistory,
-          "Command: " + commandString + "\n Output: ",
-        ]);
+    // const commandArgs = commandString.split(" ");
+    // let outputMsg: string | string[][];
+    // let column = "";
+    // let value = "";
+    // let hasHeader = "";
+    // if (commandArgs.length > 4) {
+    //   outputMsg = "please give a max of 3 arguments for search.";
+    // } else if (commandArgs.length < 2) {
+    //   outputMsg =
+    //     "please provide a search term and optional column identifier for search.";
+    // } else {
+    //   value = commandArgs[1];
+    //   if (commandArgs.length == 4) {
+    //     column = commandArgs[1];
+    //     value = commandArgs[2];
+    //     hasHeader = commandArgs[3];
+    //   }
+    //   if (commandArgs.length == 3) {
+    //     column = commandArgs[1];
+    //     value = commandArgs[2];
+    //   }
+    //   outputMsg = searchcsv(column, value, hasHeader);
+    // }
+    // switch (mode) {
+    //   case Mode.Verbose:
+    //     props.setHistory((prevHistory) => [
+    //       ...prevHistory,
+    //       "Command: " + commandString + "\n Output: ",
+    //     ]);
 
-        props.setHistory((prevHistory) => [...prevHistory, outputMsg]);
-        break;
+    //     props.setHistory((prevHistory) => [...prevHistory, outputMsg]);
+    //     break;
 
-      case Mode.Brief:
-        props.setHistory([...props.history, outputMsg]);
-        break;
-    }
+    //   case Mode.Brief:
+    //     props.setHistory([...props.history, outputMsg]);
+    //     break;
+    // }
   }
 
   // /**

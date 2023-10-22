@@ -1,6 +1,7 @@
-C:\Users\prana\Documents\GitHub\csv-prlakshm\src\main\java\edu\brown\cs\student\main\Searcher.java
-C:\Users\prana\Documents\GitHub\csv-prlakshm\src\main\java\edu\brown\cs\student\main\Main.java
-C:\Users\prana\Documents\GitHub\csv-prlakshm\src\main\java\edu\brown\cs\student\main\FactoryFailureException.java
-C:\Users\prana\Documents\GitHub\csv-prlakshm\src\main\java\edu\brown\cs\student\main\StringCreator.java
-C:\Users\prana\Documents\GitHub\csv-prlakshm\src\main\java\edu\brown\cs\student\main\Parser.java
-C:\Users\prana\Documents\GitHub\csv-prlakshm\src\main\java\edu\brown\cs\student\main\CreatorFromRow.java
+/Users/eric_ex/Code/CS32/server-ryane008-ERICEX2025/src/main/java/edu/brown/cs/student/main/DataObject/StringList.java
+/Users/eric_ex/Code/CS32/server-ryane008-ERICEX2025/src/main/java/edu/brown/cs/student/main/DataObject/FactoryFailureException.java
+/Users/eric_ex/Code/CS32/server-ryane008-ERICEX2025/src/main/java/edu/brown/cs/student/main/CSV/CSVParser.java
+/Users/eric_ex/Code/CS32/server-ryane008-ERICEX2025/src/main/java/edu/brown/cs/student/main/Main.java
+/Users/eric_ex/Code/CS32/server-ryane008-ERICEX2025/src/main/java/edu/brown/cs/student/main/DataObject/GiantString.java
+/Users/eric_ex/Code/CS32/server-ryane008-ERICEX2025/src/main/java/edu/brown/cs/student/main/DataObject/CreatorFromRow.java
+/Users/eric_ex/Code/CS32/server-ryane008-ERICEX2025/src/main/java/edu/brown/cs/student/main/CSV/CSVSearcher.java
