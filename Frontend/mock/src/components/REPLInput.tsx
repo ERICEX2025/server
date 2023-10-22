@@ -41,7 +41,7 @@ export function REPLInput(props: REPLInputProps) {
   function handleSubmit(event: FormEvent) {
     event.preventDefault(); // Prevent the default form submission behavior
    
-    const commandArgs = commandString.split(" ");
+    const commandArgs = splitSpacesExcludeQuotes(commandString);
     setCommandString("");
 
     if (commandArgs.length === 0) {
@@ -236,15 +236,42 @@ export function REPLInput(props: REPLInputProps) {
    */
   const handleSearch: REPLFunction = async (args: Array<string>) => {
     const commandArgs = args;
+    if (commandArgs.length >= 4) {
+      return "It seems like you're trying to enter more than 3 search params. If your identifier or search term have multiple words, wrap them in quotes."
+    }
 
+    let urlToSearch = "http://localhost:3232/searchcsv"
+    const numQueryParams = commandArgs.length;
+    switch (numQueryParams) {
+      case 1:
+        urlToSearch += "?term=" + commandArgs[0];
+        break;
+      case 2:
+        urlToSearch += "?term=" + commandArgs[0]+"&hasheader="+commandArgs[1];
+        break;
+      case 3:
+        urlToSearch += "?term=" + commandArgs[0]+"&hasheader="+commandArgs[1]+"&identifier=" +commandArgs[2];
+        break;
+      default:
+        break;
+    }
+    const response = await fetch(urlToSearch);
+    const responseJson = await response.json();
+    const result = responseJson.result;
+    if (result.includes("error")) {
+      return result;
+    }
+    const data = responseJson.data;
+    return data;
+
+
+
+    // in all other cases, we can attempt to search
     const queryTerm = commandArgs[0];
     const queryHeaders = commandArgs[1];
 
-    if (commandArgs.length == 3) {
+    if (commandArgs.length == 3) { // all three params
       const queryID = commandArgs[2];
-      console.log("qID: " + queryID);
-      console.log("qTerm: " + queryTerm);
-      console.log("qHead: " + queryHeaders);
       const response = await fetch(
         "http://localhost:3232/searchcsv?term=" +
           queryTerm +
@@ -258,11 +285,10 @@ export function REPLInput(props: REPLInputProps) {
       const data = responseJson.data;
       console.log("3 response: " + result);
       if (result.includes("error")) {
-        return result + " filepath: " + data;
+        return result + " data: " + data;
       } else {
-        console.log(data);
-
-        return data;
+        
+        return result + data;
       }
     } else if (commandArgs.length == 2) {
       console.log("qTerm: " + queryTerm);
