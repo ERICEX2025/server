@@ -1,6 +1,9 @@
 import { Dispatch, SetStateAction, useState, useRef } from "react";
 import { Mode } from "../enums";
 import { ControlledInput } from "./ControlledInput";
+import splitSpacesExcludeQuotes from "quoted-string-space-split";
+
+
 
 /**
  * repl interface for the functions of the registered commands
