@@ -90,7 +90,17 @@ export function REPLInput(props: REPLInputProps) {
           "command function for command: " + commandArgs[0] + "is undefined",
         ]);
       } else {
+<<<<<<< HEAD
         commandFunction(commandArgs).then(r =>);
+=======
+        commandFunction(commandArgs)
+          .then((result) => {
+            console.log(result), props.setHistory([...props.history, result]);
+          })
+          .catch((error) => {
+            props.setHistory([...props.history, "sad"]);
+          });
+>>>>>>> ed078c3015a79267b54f57eea8acb4444127ee23
       }
     }
     // if user is trying to use an invalid command
@@ -136,16 +146,27 @@ export function REPLInput(props: REPLInputProps) {
    * @param commandString
    */
   const handleLoad: REPLFunction = async (args: Array<string>) => {
-    const commandArgs = commandString.split(" ");
-    let outputMsg;
+    const commandArgs = args;
+    console.log(args);
+    const queryFilePath = commandArgs[0];
+    const queryHeaders = commandArgs[1];
+
+    console.log("qfp: " + queryFilePath);
+    console.log("qh: " + queryHeaders);
 
     const response = await fetch(
-      "http://localhost:3434/loadcsv?filepath=stars/ten-star.csv&hasHeaders=true"
+      "http://localhost:3434/loadcsv?filepath=" +
+        queryFilePath +
+        "&hasHeaders=" +
+        queryHeaders
     );
     const responseJson = await response.json();
-    console.log(responseJson);
-
-    props.setHistory([...props.history, JSON.stringify(responseJson)]);
+    const response_type = await responseJson.response_type;
+    const filepath = await responseJson.filepath;
+    if (response_type.includes("error")) {
+      return response_type + " filepath: " + filepath;
+    }
+    return "successfully loaded " + filepath;
 
     // if (commandArgs.length != 2) {
     //   outputMsg =
@@ -164,13 +185,6 @@ export function REPLInput(props: REPLInputProps) {
     //     props.setHistory([...props.history, outputMsg]);
     //     break;
     // }
-    return new Promise<string>((resolve, reject) => {
-      // Implement your function logic here.
-      // You can access the command arguments in the 'args' array.
-
-      // For example, let's say we return a simple message.
-      resolve(`Arguments received: ${args.join(", ")}`);
-    });
   };
   /**
    * handles view case after error handling,
