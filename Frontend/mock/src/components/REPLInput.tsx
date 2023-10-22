@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState, useRef } from "react";
+import { Dispatch, SetStateAction, useState, useRef, FormEvent } from "react";
 import { Mode } from "../enums";
 import { ControlledInput } from "./ControlledInput";
 import splitSpacesExcludeQuotes from "quoted-string-space-split";
@@ -40,7 +40,9 @@ export function REPLInput(props: REPLInputProps) {
   // useRef hook since the dynamic array is only used for logic and not state
   const registeredCommands = useRef<string[]>([]);
 
-  function handleSubmit(commandString: string) {
+  function handleSubmit(event: FormEvent) {
+    event.preventDefault(); // Prevent the default form submission behavior
+   
     const commandArgs = commandString.split(" ");
     setCommandString("");
 
@@ -299,24 +301,30 @@ export function REPLInput(props: REPLInputProps) {
 
   return (
     <div className="REPL-input">
-      <fieldset>
-        <ControlledInput
-          value={commandString}
-          setValue={setCommandString}
-          ariaLabel={"Command input"}
-        />
-        <br /> {/* Add a line break (new line) */}
-        <button
-          onClick={() => handleSubmit(commandString)}
-          style={{
-            backgroundColor: "#FF7F50",
-            color: "#ffffff",
-            marginTop: "10px",
-          }}
-        >
-          Submit
-        </button>
-      </fieldset>
+      {/* Wrap your input and button with a form element */}
+      <form onSubmit={handleSubmit}>
+        {/* Attach the handleSubmit to form submission */}
+        <fieldset>
+          <ControlledInput
+            value={commandString}
+            setValue={setCommandString}
+            ariaLabel={"Command input"}
+          />
+          <br />
+          {/* Change button type to "submit" */}
+          <button
+            type="submit"
+            style={{
+              backgroundColor: "#FF7F50",
+              color: "#ffffff",
+              marginTop: "10px",
+            }}
+          >
+            Submit
+          </button>
+        </fieldset>
+      </form>
     </div>
   );
 }
+

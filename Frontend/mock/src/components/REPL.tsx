@@ -2,7 +2,7 @@ import { useState } from "react";
 import { REPLInput } from "./REPLInput";
 import { REPLHistory } from "./REPLHistory";
 
-//Extra simple TODO chores: add enter functionality, display html table to newest inputted command, mode kinda scuffed
+//Extra simple TODO chores: display html table to newest inputted command and flexbox, mode kinda scuffed
 /**
  * top level REPL component that ocntains the REPL Input and History
  * contains the history state passed into the child componenets
