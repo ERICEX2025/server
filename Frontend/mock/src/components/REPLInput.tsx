@@ -3,8 +3,6 @@ import { Mode } from "../enums";
 import { ControlledInput } from "./ControlledInput";
 import splitSpacesExcludeQuotes from "quoted-string-space-split";
 
-
-
 /**
  * repl interface for the functions of the registered commands
  */
@@ -59,7 +57,10 @@ export function REPLInput(props: REPLInputProps) {
     // first check if user is trying to register a command
     if (command === "register") {
       if (commandArgs.length === 0) {
-        props.setHistory([...props.history, "please enter a command to register"]);
+        props.setHistory([
+          ...props.history,
+          "please enter a command to register",
+        ]);
       }
       // then if the command is already registered
       else if (registeredCommands.current.includes(commandArgs[0])) {
@@ -111,7 +112,8 @@ export function REPLInput(props: REPLInputProps) {
     }
     // if user is trying to use an invalid command
     else {
-      props.setHistory([...props.history,
+      props.setHistory([
+        ...props.history,
         "command: " + command + " is not one of the registered commands",
       ]);
     }
@@ -140,7 +142,8 @@ export function REPLInput(props: REPLInputProps) {
       default:
         props.setHistory([
           ...props.history,
-          commandString + " does not exist, try either mode brief or mode verbose",
+          commandString +
+            " does not exist, try either mode brief or mode verbose",
         ]);
         break;
     }
@@ -161,14 +164,12 @@ export function REPLInput(props: REPLInputProps) {
     const responseJson = await response.json();
     const response_type = responseJson.result;
 
-
     if (response_type.includes("error")) {
       return response_type + " filepath: " + queryFilePath;
     }
     const filepath = responseJson.csvfile;
-    return "successfully loaded " + filepath; 
-  
-  
+    return "successfully loaded " + filepath;
+
     // if (commandArgs.length != 2) {
     //   outputMsg =
     //     "Please provide 1 argument for load: load_file <csv-file-path>";
@@ -194,16 +195,12 @@ export function REPLInput(props: REPLInputProps) {
    * @param commandString
    */
   const handleView: REPLFunction = async (args: Array<string>) => {
-
-    const response = await fetch(
-      "http://localhost:3232/viewcsv"
-    );
+    const response = await fetch("http://localhost:3232/viewcsv");
     const responseJson = await response.json();
     const response_type = responseJson.result;
-    if(typeof(response_type) == "string") {
+    if (typeof response_type == "string") {
       return " csv file not loaded";
-    }
-    else{
+    } else {
       const data = responseJson.data;
       return data;
     }
@@ -227,7 +224,7 @@ export function REPLInput(props: REPLInputProps) {
     //     props.setHistory([...props.history, outputMsg]);
     //     break;
     // }
-  }
+  };
 
   /**
    * handles search case after error handling,
@@ -236,13 +233,16 @@ export function REPLInput(props: REPLInputProps) {
    * @param commandString
    */
   const handleSearch: REPLFunction = async (args: Array<string>) => {
-    const commandArgs = splitSpacesExcludeQuotes(commandString);
+    const commandArgs = args;
 
     const queryTerm = commandArgs[0];
     const queryHeaders = commandArgs[1];
 
     if (commandArgs.length == 3) {
       const queryID = commandArgs[2];
+      console.log("qID: " + queryID);
+      console.log("qTerm: " + queryTerm);
+      console.log("qHead: " + queryHeaders);
       const response = await fetch(
         "http://localhost:3232/searchcsv?term=" +
           queryTerm +
@@ -252,12 +252,19 @@ export function REPLInput(props: REPLInputProps) {
           queryID
       );
       const responseJson = await response.json();
-      const response_type = responseJson.status;
-      const filepath = responseJson.csvfile;
-      if (response_type.includes("error")) {
-        return response_type + " filepath: " + filepath;
+      const result = responseJson.result;
+      const data = responseJson.data;
+      console.log("3 response: " + result);
+      if (result.includes("error")) {
+        return result + " filepath: " + data;
+      } else {
+        console.log(data);
+
+        return data;
       }
     } else if (commandArgs.length == 2) {
+      console.log("qTerm: " + queryTerm);
+      console.log("qHead: " + queryHeaders);
       const response = await fetch(
         "http://localhost:3232/searchcsv?term=" +
           queryTerm +
@@ -265,10 +272,15 @@ export function REPLInput(props: REPLInputProps) {
           queryHeaders
       );
       const responseJson = await response.json();
-      const response_type = responseJson.status;
-      const filepath = responseJson.csvfile;
-      if (response_type.includes("error")) {
-        return response_type + " filepath: " + filepath;
+      const result = responseJson.result;
+      const data = responseJson.data;
+      console.log("rahh response: " + result);
+      if (result.includes("error")) {
+        return "result: " + result + " data: " + data;
+      } else {
+        console.log(data);
+
+        return data;
       }
     } else {
       const response = await fetch(
@@ -279,6 +291,8 @@ export function REPLInput(props: REPLInputProps) {
       );
       const responseJson = await response.json();
       const status = responseJson.status;
+      console.log("2 response: " + status);
+
       const filepath = responseJson.csvfile;
       if (status.includes("error")) {
         return status;
@@ -288,12 +302,12 @@ export function REPLInput(props: REPLInputProps) {
     // const responseJson = await response.json();
     // const response_type = responseJson.result;
     // const filepath = responseJson.csvfile;
-  }
+  };
 
   const possibleCommands: Map<string, REPLFunction> = new Map([
     ["load_file", handleLoad],
     ["view", handleView],
-    // ["search", handleSearch],
+    ["search", handleSearch],
     // ["mode", handleMode]
   ]);
 

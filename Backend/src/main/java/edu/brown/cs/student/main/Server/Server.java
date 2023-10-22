@@ -3,6 +3,7 @@ package edu.brown.cs.student.main.Server;
 import static spark.Spark.after;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import spark.Spark;
@@ -76,7 +77,8 @@ public class Server {
    * @return parsedLoadedCSV, List<List<String>>
    */
   public static List<List<String>> getParsedLoadedCSV() {
-    return parsedLoadedCSV;
+    List<List<String>> copyList = new ArrayList<>(parsedLoadedCSV);
+    return copyList;
   }
 
   /**
