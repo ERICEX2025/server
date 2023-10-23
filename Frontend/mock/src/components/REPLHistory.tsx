@@ -125,52 +125,5 @@ export function REPLHistory(props: REPLHistoryProps) {
      </div>
    );
 
-  // return (
-  //   <div className="REPL-history repl-history" aria-label="Command history">
-  //     <h3> History Log </h3>
-
-  //     <table className="table-dimensions">
-  //       {props.history.map((item, index) =>
-  //         //if item is a string, display string
-  //         typeof item === "string" ? (
-  //           <p key={index} aria-label={"Item " + index}>
-  //             {item}
-  //           </p>
-  //         ) : (
-  //           //if item is a 2d string array, display as a html table
-  //           <div className="table-body">
-  //             <table aria-label={"Item " + index}>
-  //               <tbody>
-  //                 {item.map((row, rowIndex) => (
-  //                   <tr
-  //                     key={rowIndex}
-  //                     aria-label={"Table " + index + " row " + rowIndex}
-  //                   >
-  //                     {row.map((cell, cellIndex) => (
-  //                       <td
-  //                         key={cellIndex}
-  //                         aria-label={
-  //                           "Table " +
-  //                           index +
-  //                           " row " +
-  //                           rowIndex +
-  //                           " entry " +
-  //                           cellIndex
-  //                         }
-  //                       >
-  //                         {cell}
-  //                       </td>
-  //                     ))}
-  //                   </tr>
-  //                 ))}
-  //               </tbody>
-  //             </table>
-  //           </div>
-  //         )
-  //       )}
-  //     </table>
-  //   </div>
-
-  //  );
   
 }

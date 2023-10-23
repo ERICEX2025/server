@@ -149,29 +149,7 @@ export function REPLInput(props: REPLInputProps) {
         );
     }
   };
-  // function handleMode: REPLFunction = async (args: Array<string>) => {
-  //   const mode = args[0];
-  //   let toReturn = "";
-  //   switch (mode) {
-  //     case "verbose":
-  //       setMode(Mode.Verbose);
-  //       toReturn = "mode set to verbose";
-  //       break;
-  //     case "brief":
-  //       setMode(Mode.Brief);
-  //       toReturn = "mode set to brief";
-  //       break;
-  //     default:
-  //       toReturn = " does not exist, try either mode brief or mode verbose";
-  //   }
-  //   const promise = new Promise((resolve) => {
-  //     setTimeout(() => {
-  //       resolve(toReturn);
-  //     }, 300);
-  //   });
-
-  //   return promise
-  // }
+  
   /**
    * handles load case after error handling,
    * sends the inputted request to the mocked
@@ -193,25 +171,8 @@ export function REPLInput(props: REPLInputProps) {
     }
     const filepath = responseJson.csvfile;
     return "successfully loaded " + filepath;
-
-    // if (commandArgs.length != 2) {
-    //   outputMsg =
-    //     "Please provide 1 argument for load: load_file <csv-file-path>";
-    // } else {
-    //   outputMsg = loadcsv(commandArgs[1]);
-    // }
-    // switch (mode) {
-    //   case Mode.Verbose:
-    //     props.setHistory([
-    //       ...props.history,
-    //       "Command: " + commandString + " \n Output: " + outputMsg,
-    //     ]);
-    //     break;
-    //   case Mode.Brief:
-    //     props.setHistory([...props.history, outputMsg]);
-    //     break;
-    // }
   };
+
   /**
    * handles view case after error handling,
    * sends the inputted request to the mocked
@@ -228,26 +189,6 @@ export function REPLInput(props: REPLInputProps) {
       const data = responseJson.data;
       return data;
     }
-    // const commandArgs = commandString.split(" ");
-    // let outputMsg: string | string[][];
-    // if (commandArgs.length > 1) {
-    //   outputMsg = "view does not take any arguments!";
-    // } else {
-    //   outputMsg = viewcsv();
-    // }
-    // switch (mode) {
-    //   case Mode.Verbose:
-    //     props.setHistory((prevHistory) => [
-    //       ...prevHistory,
-    //       "Command: " + commandString + "\n Output: ",
-    //     ]);
-    //     props.setHistory((prevHistory) => [...prevHistory, outputMsg]);
-    //     break;
-
-    //   case Mode.Brief:
-    //     props.setHistory([...props.history, outputMsg]);
-    //     break;
-    // }
   };
 
   /**
