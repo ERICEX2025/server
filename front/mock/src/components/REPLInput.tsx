@@ -18,7 +18,7 @@ interface REPLInputProps {
 }
 
 export function REPLInput(props: REPLInputProps) {
-  const [mode, setMode] = useState<Mode>(Mode.Brief);
+  let mode = useRef<Mode>(Mode.Brief);
   const [commandString, setCommandString] = useState<string>("");
 
   // used to contain the current registered commands
@@ -90,7 +90,7 @@ export function REPLInput(props: REPLInputProps) {
             .then((result) => {
               const myHistoryItem: HistoryItem = {
                 data: result,
-                mode: mode,
+                mode: mode.current,
                 command: commandString,
               };
               props.setHistory([...props.history, myHistoryItem]);
@@ -99,7 +99,7 @@ export function REPLInput(props: REPLInputProps) {
             .catch((error) => {
              const myHistoryItem: HistoryItem = {
                data: error,
-               mode: mode,
+               mode: mode.current,
                command: commandString,
              };
              props.setHistory([...props.history, myHistoryItem]);
@@ -114,7 +114,7 @@ export function REPLInput(props: REPLInputProps) {
     }
     const myHistoryItem: HistoryItem = {
       data: data,
-      mode: mode,
+      mode: mode.current,
       command: commandString,
     };
     props.setHistory([...props.history, myHistoryItem]);
@@ -133,15 +133,13 @@ export function REPLInput(props: REPLInputProps) {
    * @return - a promise that resolves to the handlemode success or error message
    */
   const handleMode: REPLFunction = async (args: Array<string>) => {
-    const mode = args[0];
-    switch (mode) {
+    const newMode = args[0];
+    switch (newMode) {
       case "verbose":
-        setMode(Mode.Verbose);
-        return (
-         "mode set to verbose"
-        );
+        mode.current = Mode.Verbose;
+        return "mode set to verbose";
       case "brief":
-        setMode(Mode.Brief);
+        mode.current = Mode.Brief;
         return "mode set to brief";
       default:
         return (
