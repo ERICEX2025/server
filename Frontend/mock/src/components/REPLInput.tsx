@@ -2,6 +2,7 @@ import { Dispatch, SetStateAction, useState, useRef, FormEvent } from "react";
 import { Mode } from "../enums";
 import { ControlledInput } from "./ControlledInput";
 import splitSpacesExcludeQuotes from "quoted-string-space-split";
+import { HistoryItem } from "./REPL";
 
 /**
  * repl interface for the functions of the registered commands
@@ -17,8 +18,8 @@ export interface REPLFunction {
  * to display
  */
 interface REPLInputProps {
-  history: (string | string[][])[];
-  setHistory: Dispatch<SetStateAction<(string | string[][])[]>>;
+  history: HistoryItem[];
+  setHistory: Dispatch<SetStateAction<HistoryItem[]>>;
 }
 
 /**
@@ -32,62 +33,58 @@ interface REPLInputProps {
  * @returns
  */
 export function REPLInput(props: REPLInputProps) {
-  const [commandString, setCommandString] = useState<string>("");
   const [mode, setMode] = useState<Mode>(Mode.Brief);
+  const [commandString, setCommandString] = useState<string>("");
+
+
   // used to contain the current registered commands
   // useRef hook since the dynamic array is only used for logic and not state
   const registeredCommands = useRef<string[]>([]);
 
+
+
   function handleSubmit(event: FormEvent) {
     event.preventDefault(); // Prevent the default form submission behavior
-   
+    const fullCommand = commandString;
     const commandArgs = splitSpacesExcludeQuotes(commandString);
     setCommandString("");
+    let stringData = "";
 
     if (commandArgs.length === 0) {
+      stringData = "please enter some args";
       return;
     }
 
     // Removes the first element from commandArgs and returns the first element
     const command = commandArgs.shift();
 
-    // check this
+    // this is sus
     if (command === undefined) {
+      stringData = "this is sus";
       return;
     }
 
     // first check if user is trying to register a command
     if (command === "register") {
       if (commandArgs.length === 0) {
-        props.setHistory([
-          ...props.history,
-          "please enter a command to register",
-        ]);
+        stringData = "please enter a command to register";
       }
       // then if the command is already registered
       else if (registeredCommands.current.includes(commandArgs[0])) {
         // command already exists
-        props.setHistory([
-          ...props.history,
-          "command: " + commandArgs[0] + " already exists!",
-        ]);
+        stringData = "command: " + commandArgs[0] + " already exists!";
       } else {
         // if so check if the command is a possible commands to register
         if (possibleCommands.has(commandArgs[0])) {
           // if it is, then register the command
           registeredCommands.current.push(commandArgs[0]);
-          props.setHistory([
-            ...props.history,
-            "command: " + commandArgs[0] + " registered",
-          ]);
+          stringData = "command: " + commandArgs[0] + " registered";
         } else {
           // if the command is not a possible command to register
-          props.setHistory([
-            ...props.history,
+          stringData =
             "command: " +
-              commandArgs[0] +
-              " not a possible command to register",
-          ]);
+            commandArgs[0] +
+            " not a possible command to register";
         }
       }
     }
@@ -98,28 +95,41 @@ export function REPLInput(props: REPLInputProps) {
       // notify the web developer that the function of this command
       // is initialized to undefined in the possibleCommands Map
       if (commandFunction === undefined) {
-        props.setHistory([
-          ...props.history,
-          "command function for command: " + commandArgs[0] + "is undefined",
-        ]);
+        stringData = 
+          "command function for command: " + commandArgs[0] + "is undefined";
       } else {
         commandFunction(commandArgs)
           .then((result) => {
-            console.log(result), props.setHistory([...props.history, result]);
+             const myHistoryItem: HistoryItem = {
+               data: result,
+               mode: mode,
+               command: fullCommand,
+             };
+             props.setHistory([...props.history, myHistoryItem]);
           })
           .catch((error) => {
-            props.setHistory([...props.history, "sad"]);
+             const myHistoryItem: HistoryItem = {
+               data: error,
+               mode: mode,
+               command: fullCommand,
+             };
+             props.setHistory([...props.history, myHistoryItem]);
           });
       }
     }
     // if user is trying to use an invalid command
     else {
-      props.setHistory([
-        ...props.history,
-        "command: " + command + " is not one of the registered commands",
-      ]);
+      stringData =
+        command + " is not one of the registered commands";
     }
+    const myHistoryItem: HistoryItem = {
+       data: stringData,
+       mode: mode,
+       command: fullCommand,
+     };
+     props.setHistory([...props.history, myHistoryItem]);
   }
+
 
   /**
    * handles mode by parsing the string
@@ -128,28 +138,43 @@ export function REPLInput(props: REPLInputProps) {
    * mode, handles error case
    * @param commandString
    */
-  function handleMode(commandString: string) {
-    switch (commandString) {
-      case "mode verbose":
+
+  const handleMode: REPLFunction = async (args: Array<string>) => {
+    const mode = args[0];
+    switch (mode) {
+      case "verbose":
         setMode(Mode.Verbose);
-        props.setHistory([
-          ...props.history,
-          "Command: " + commandString + " \n Output: " + "mode set to verbose",
-        ]);
-        break;
-      case "mode brief":
+        return "Command: " + commandString + " \n Output: " + "mode set to verbose";
+      case "brief":
         setMode(Mode.Brief);
-        props.setHistory([...props.history, "mode set to brief"]);
-        break;
+        return "mode set to brief";
       default:
-        props.setHistory([
-          ...props.history,
-          commandString +
-            " does not exist, try either mode brief or mode verbose",
-        ]);
-        break;
+        return commandString + " does not exist, try either mode brief or mode verbose";
     }
   }
+  // function handleMode: REPLFunction = async (args: Array<string>) => {
+  //   const mode = args[0];
+  //   let toReturn = "";
+  //   switch (mode) {
+  //     case "verbose":
+  //       setMode(Mode.Verbose);
+  //       toReturn = "mode set to verbose";
+  //       break;
+  //     case "brief":
+  //       setMode(Mode.Brief);
+  //       toReturn = "mode set to brief";
+  //       break;
+  //     default:
+  //       toReturn = " does not exist, try either mode brief or mode verbose";
+  //   }
+  //   const promise = new Promise((resolve) => {
+  //     setTimeout(() => {
+  //       resolve(toReturn);
+  //     }, 300);
+  //   });
+
+  //   return promise
+  // }
   /**
    * handles load case after error handling,
    * sends the inputted request to the mocked
@@ -199,9 +224,9 @@ export function REPLInput(props: REPLInputProps) {
   const handleView: REPLFunction = async (args: Array<string>) => {
     const response = await fetch("http://localhost:3232/viewcsv");
     const responseJson = await response.json();
-    const response_type = responseJson.result;
-    if (typeof response_type == "string") {
-      return " csv file not loaded";
+    const result = responseJson.result;
+    if (result.includes("error")) {
+      return result;
     } else {
       const data = responseJson.data;
       return data;
@@ -336,7 +361,7 @@ export function REPLInput(props: REPLInputProps) {
     ["load_file", handleLoad],
     ["view", handleView],
     ["search", handleSearch],
-    // ["mode", handleMode]
+    ["mode", handleMode],
   ]);
 
   return (

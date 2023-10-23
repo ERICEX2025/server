@@ -36,11 +36,7 @@ public class ViewCSVHandler implements Route {
       return new ViewCSVFailureResponse(toSend).serialize();
     }
 
-    List<List<String>> result = new ArrayList<>();
-    ArrayList<String> status = new ArrayList<>();
-    status.add("success");
-    result.add(status);
-    toSend.put("result", result);
+    toSend.put("result", "success");
     toSend.put("data", Server.getParsedLoadedCSV());
     return new ViewCSVSuccessResponse(toSend).serialize();
   }
@@ -48,9 +44,7 @@ public class ViewCSVHandler implements Route {
   public record ViewCSVSuccessResponse(HashMap<String, Object> response_type) {
     String serialize() {
       Moshi moshi = new Moshi.Builder().build();
-      Type objectStringMap = Types.newParameterizedType
-          (Map.class, String.class, List.class,
-              Types.newParameterizedType(List.class, String.class));
+      Type objectStringMap = Types.newParameterizedType(Map.class, String.class, Object.class);
       JsonAdapter<Map<String, Object>> adapter = moshi.adapter(objectStringMap);
       return adapter.toJson(response_type);
     }

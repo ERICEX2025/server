@@ -46,20 +46,11 @@ public class SearchCSVHandler implements Route {
       return new SearchCSVFailureResponse(toSend).serialize();
     }
     try{
-      List<List<String>> result = new ArrayList<>();
+      String parameters = "Term is " + request.queryParams("term") + ", Boolean is " +
+          request.queryParams("hasheader") + ", If identifier exists, identifier is " + request.queryParams("identifier");
 
-      ArrayList<String> status = new ArrayList<>();
-      status.add("success");
-
-      ArrayList<String> parameters = new ArrayList<>();
-      parameters.add("Term is " + request.queryParams("term") + ", Boolean is " +
-          request.queryParams("hasheader") + ", If identifier exists, identifier is " + request.queryParams("identifier"));
-
-      result.add(status);
-      toSend.put("result", result);
+      toSend.put("result", "success");
       toSend.put("Parameters", parameters);
-
-
       List<List<String>> data = new CSVSearcher(request.queryParams("term"),
           Boolean.parseBoolean(request.queryParams("hasheader")), request.queryParams("identifier"))
           .search();
@@ -84,9 +75,7 @@ public class SearchCSVHandler implements Route {
   public record SearchCSVSuccessResponse(HashMap<String, Object> response_type) {
     String serialize() {
       Moshi moshi = new Moshi.Builder().build();
-      Type objectStringMap = Types.newParameterizedType
-          (Map.class, String.class, List.class,
-              Types.newParameterizedType(List.class, String.class));
+      Type objectStringMap = Types.newParameterizedType(Map.class, String.class, Object.class);
       JsonAdapter<Map<String, Object>> adapter = moshi.adapter(objectStringMap);
       return adapter.toJson(response_type);
     }
