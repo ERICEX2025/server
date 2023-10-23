@@ -37,7 +37,7 @@ public class ACSCensusDataSource implements CensusDataSource {
    */
   @Override
   public BroadbandData getPercentage(String state, String county)
-      throws CountyDoesNotExistException {
+          throws CountyDoesNotExistException {
     try {
       HashMap<String, Object> result = new HashMap();
 
@@ -61,7 +61,7 @@ public class ACSCensusDataSource implements CensusDataSource {
         Moshi moshi = new Moshi.Builder().build();
 
         JsonAdapter<List<List<String>>> adapter = moshi.adapter(
-            Types.newParameterizedType(List.class, Types.newParameterizedType(List.class, String.class)));
+                Types.newParameterizedType(List.class, Types.newParameterizedType(List.class, String.class)));
 
         Buffer buffer = new Buffer();
 
@@ -69,8 +69,14 @@ public class ACSCensusDataSource implements CensusDataSource {
 
         clientConnection.disconnect();
 
+        List<List<String>> data = new ArrayList<>();
+        result.put("data", data);
+
         for(int i = 1; i < body.size(); i++){
-          result.put(body.get(i).get(0), body.get(i).get(1));
+          List<String> row = new ArrayList<>();
+          row.add(body.get(i).get(0));
+          row.add(": " + body.get(i).get(1));
+          data.add(row);
         }
 
         result.put("time", timestampStr);
@@ -86,7 +92,7 @@ public class ACSCensusDataSource implements CensusDataSource {
 
 
         JsonAdapter<List<List<String>>> adapter = moshi.adapter(
-            Types.newParameterizedType(List.class, Types.newParameterizedType(List.class, String.class)));
+                Types.newParameterizedType(List.class, Types.newParameterizedType(List.class, String.class)));
 
         Buffer buffer = new Buffer();
 
@@ -94,9 +100,15 @@ public class ACSCensusDataSource implements CensusDataSource {
 
         clientConnection.disconnect();
 
-        result.put(body.get(1).get(0), body.get(1).get(1));
+//        result.put(body.get(1).get(0), body.get(1).get(1));
 
-        result.put("Time", timestampStr);
+        List<List<String>> data = new ArrayList<>();
+        result.put("data", data);
+        List<String> row = new ArrayList<>();
+        row.add(body.get(1).get(0));
+        row.add(": " + body.get(1).get(1));
+        data.add(row);
+        result.put("time", timestampStr);
         return new BroadbandData(result);
 
       }
@@ -117,7 +129,7 @@ public class ACSCensusDataSource implements CensusDataSource {
     HttpURLConnection clientConnection = connect(requestURL);
     Moshi moshi = new Moshi.Builder().build();
     JsonAdapter<List<List<String>>> adapter = moshi.adapter(
-        Types.newParameterizedType(List.class, Types.newParameterizedType(List.class, String.class)));
+            Types.newParameterizedType(List.class, Types.newParameterizedType(List.class, String.class)));
 
     Buffer buffer = new Buffer();
 
@@ -138,7 +150,7 @@ public class ACSCensusDataSource implements CensusDataSource {
     Moshi moshi = new Moshi.Builder().build();
 
     JsonAdapter<List<List<String>>> adapter = moshi.adapter(
-        Types.newParameterizedType(List.class, Types.newParameterizedType(List.class, String.class)));
+            Types.newParameterizedType(List.class, Types.newParameterizedType(List.class, String.class)));
     try {
       Buffer buffer = new Buffer();
       List<List<String>> body;

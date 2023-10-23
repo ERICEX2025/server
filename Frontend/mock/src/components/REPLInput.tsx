@@ -36,12 +36,9 @@ export function REPLInput(props: REPLInputProps) {
   const [mode, setMode] = useState<Mode>(Mode.Brief);
   const [commandString, setCommandString] = useState<string>("");
 
-
   // used to contain the current registered commands
   // useRef hook since the dynamic array is only used for logic and not state
   const registeredCommands = useRef<string[]>([]);
-
-
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault(); // Prevent the default form submission behavior
@@ -72,7 +69,7 @@ export function REPLInput(props: REPLInputProps) {
       // then if the command is already registered
       else if (registeredCommands.current.includes(commandArgs[0])) {
         // command already exists
-        stringData =  commandArgs[0] + " already exists!";
+        stringData = commandArgs[0] + " already exists!";
       } else {
         // if so check if the command is a possible commands to register
         if (possibleCommands.has(commandArgs[0])) {
@@ -81,10 +78,7 @@ export function REPLInput(props: REPLInputProps) {
           stringData = commandArgs[0] + " registered";
         } else {
           // if the command is not a possible command to register
-          stringData =
-           
-            commandArgs[0] +
-            " not a possible command to register";
+          stringData = commandArgs[0] + " not a possible command to register";
         }
       }
     }
@@ -95,41 +89,39 @@ export function REPLInput(props: REPLInputProps) {
       // notify the web developer that the function of this command
       // is initialized to undefined in the possibleCommands Map
       if (commandFunction === undefined) {
-        stringData = 
+        stringData =
           "command function for command: " + commandArgs[0] + "is undefined";
       } else {
         commandFunction(commandArgs)
           .then((result) => {
-             const myHistoryItem: HistoryItem = {
-               data: result,
-               mode: mode,
-               command: fullCommand,
-             };
-             props.setHistory([...props.history, myHistoryItem]);
+            const myHistoryItem: HistoryItem = {
+              data: result,
+              mode: mode,
+              command: fullCommand,
+            };
+            props.setHistory([...props.history, myHistoryItem]);
           })
           .catch((error) => {
-             const myHistoryItem: HistoryItem = {
-               data: error,
-               mode: mode,
-               command: fullCommand,
-             };
-             props.setHistory([...props.history, myHistoryItem]);
+            const myHistoryItem: HistoryItem = {
+              data: error,
+              mode: mode,
+              command: fullCommand,
+            };
+            props.setHistory([...props.history, myHistoryItem]);
           });
       }
     }
     // if user is trying to use an invalid command
     else {
-      stringData =
-        commandString + " is not one of the registered commands";
+      stringData = commandString + " is not one of the registered commands";
     }
     const myHistoryItem: HistoryItem = {
-       data: stringData,
-       mode: mode,
-       command: fullCommand,
-     };
-     props.setHistory([...props.history, myHistoryItem]);
+      data: stringData,
+      mode: mode,
+      command: fullCommand,
+    };
+    props.setHistory([...props.history, myHistoryItem]);
   }
-
 
   /**
    * handles mode by parsing the string
@@ -144,14 +136,19 @@ export function REPLInput(props: REPLInputProps) {
     switch (mode) {
       case "verbose":
         setMode(Mode.Verbose);
-        return "Command: " + commandString + " \n Output: " + "mode set to verbose";
+        return (
+          "Command: " + commandString + " \n Output: " + "mode set to verbose"
+        );
       case "brief":
         setMode(Mode.Brief);
         return "mode set to brief";
       default:
-        return commandString + " does not exist, try either mode brief or mode verbose";
+        return (
+          commandString +
+          " does not exist, try either mode brief or mode verbose"
+        );
     }
-  }
+  };
   // function handleMode: REPLFunction = async (args: Array<string>) => {
   //   const mode = args[0];
   //   let toReturn = "";
@@ -262,99 +259,86 @@ export function REPLInput(props: REPLInputProps) {
   const handleSearch: REPLFunction = async (args: Array<string>) => {
     const commandArgs = args;
     if (commandArgs.length >= 4) {
-      return "It seems like you're trying to enter more than 3 search params. If your identifier or search term have multiple words, wrap them in quotes."
+      return "It seems like you're trying to enter more than 3 search params. If your identifier or search term have multiple words, wrap them in quotes.";
     }
 
-    let urlToSearch = "http://localhost:3232/searchcsv"
+    let urlToSearch = "http://localhost:3232/searchcsv";
     const numQueryParams = commandArgs.length;
     switch (numQueryParams) {
       case 1:
         urlToSearch += "?term=" + commandArgs[0];
         break;
       case 2:
-        urlToSearch += "?term=" + commandArgs[0]+"&hasheader="+commandArgs[1];
+        urlToSearch +=
+          "?term=" + commandArgs[0] + "&hasheader=" + commandArgs[1];
         break;
       case 3:
-        urlToSearch += "?term=" + commandArgs[0]+"&hasheader="+commandArgs[1]+"&identifier=" +commandArgs[2];
+        urlToSearch +=
+          "?term=" +
+          commandArgs[0] +
+          "&hasheader=" +
+          commandArgs[1] +
+          "&identifier=" +
+          commandArgs[2];
         break;
       default:
         break;
     }
     const response = await fetch(urlToSearch);
     const responseJson = await response.json();
-    const result = responseJson.result;
+    const result = await responseJson.result;
     if (result.includes("error")) {
       return result;
     }
-    const data = responseJson.data;
-    return data;
+    return responseJson.data;
+  };
 
+  /**
+   * Example function that could be hardcoded by a developer stakeholder
+   * to register for their own use.
+   */
+  const handleAdd2And2: REPLFunction = async (args: Array<string>) => {
+    return String(2 + 2);
+  };
 
-
-    // in all other cases, we can attempt to search
-    const queryTerm = commandArgs[0];
-    const queryHeaders = commandArgs[1];
-
-    if (commandArgs.length == 3) { // all three params
-      const queryID = commandArgs[2];
-      const response = await fetch(
-        "http://localhost:3232/searchcsv?term=" +
-          queryTerm +
-          "&hasheader=" +
-          queryHeaders +
-          "&identifier=" +
-          queryID
-      );
-      const responseJson = await response.json();
-      const result = responseJson.result;
-      const data = responseJson.data;
-      console.log("3 response: " + result);
-      if (result.includes("error")) {
-        return result + " data: " + data;
-      } else {
-        
-        return result + data;
-      }
-    } else if (commandArgs.length == 2) {
-      console.log("qTerm: " + queryTerm);
-      console.log("qHead: " + queryHeaders);
-      const response = await fetch(
-        "http://localhost:3232/searchcsv?term=" +
-          queryTerm +
-          "&hasheader=" +
-          queryHeaders
-      );
-      const responseJson = await response.json();
-      const result = responseJson.result;
-      const data = responseJson.data;
-      console.log("rahh response: " + result);
-      if (result.includes("error")) {
-        return "result: " + result + " data: " + data;
-      } else {
-        console.log(data);
-
-        return data;
-      }
-    } else {
-      const response = await fetch(
-        "http://localhost:3232/searchcsv?term=" +
-          queryTerm +
-          "&hasheader=" +
-          queryHeaders
-      );
-      const responseJson = await response.json();
-      const status = responseJson.status;
-      console.log("2 response: " + status);
-
-      const filepath = responseJson.csvfile;
-      if (status.includes("error")) {
-        return status;
-      }
+  const handleBroadband: REPLFunction = async (args: Array<string>) => {
+    const commandArgs = args;
+    if (commandArgs.length > 2) {
+      return "It seems like you're trying to enter more params than state and county. If your state or county have multiple words, wrap them in quotes.";
     }
+    let urlToSearch = "http://localhost:3232/broadband";
+    const numQueryParams = commandArgs.length;
+    switch (numQueryParams) {
+      case 1:
+        urlToSearch += "?state=" + commandArgs[0];
+        break;
+      case 2:
+        urlToSearch += "?state=" + commandArgs[0] + "&county=" + commandArgs[1];
+        break;
+      default:
+        break;
+    }
+    console.log("url: " + urlToSearch);
+    const response = await fetch(urlToSearch);
+    console.log("response: " + JSON.stringify(response));
+    const responseJson = await response.json();
+    const result = responseJson.result;
+    console.log("result: " + result);
 
-    // const responseJson = await response.json();
-    // const response_type = responseJson.result;
-    // const filepath = responseJson.csvfile;
+    if (result.includes("error")) {
+      return result;
+    }
+    return responseJson.data;
+
+    // return JSON.stringify(responseJson);
+
+    //const result = await responseJson.result;     <= THIS SHOULD WORK IDEALLY INSTEAD OF STRINGIFYING
+    //console.log("result: " + result)
+    //console.log("time: " + result.time);
+    // if (result.includes("error")) {
+    //   return result;
+    // }
+    // return responseJson.time;
   };
 
   const possibleCommands: Map<string, REPLFunction> = new Map([
@@ -362,6 +346,8 @@ export function REPLInput(props: REPLInputProps) {
     ["view", handleView],
     ["search", handleSearch],
     ["mode", handleMode],
+    ["add2and2", handleAdd2And2],
+    ["broadband", handleBroadband],
   ]);
 
   return (

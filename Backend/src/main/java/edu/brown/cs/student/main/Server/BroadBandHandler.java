@@ -63,17 +63,18 @@ public class BroadBandHandler implements Route {
         toSend.put("result", "error_bad_request, " + county + " county does not exist");
         return new BroadBandFailureResponse(toSend).serialize();
       }
+      toSend.put("result", "success");
       return new BroadBandSuccessResponse(toSend).serialize();
     }
   }
 
   public record BroadBandSuccessResponse(HashMap<String, Object> response_type) {
     String serialize() {
-        Moshi moshi = new Moshi.Builder().build();
-        Type objectStringMap = Types.newParameterizedType(
-            Map.class, String.class, Object.class);
-        JsonAdapter<Map<String, Object>> adapter = moshi.adapter(objectStringMap);
-        return adapter.toJson(response_type);
+      Moshi moshi = new Moshi.Builder().build();
+      Type objectStringMap = Types.newParameterizedType(
+              Map.class, String.class, Object.class);
+      JsonAdapter<Map<String, Object>> adapter = moshi.adapter(objectStringMap);
+      return adapter.toJson(response_type);
     }
 
   }
