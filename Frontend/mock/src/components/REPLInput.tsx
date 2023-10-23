@@ -72,17 +72,17 @@ export function REPLInput(props: REPLInputProps) {
       // then if the command is already registered
       else if (registeredCommands.current.includes(commandArgs[0])) {
         // command already exists
-        stringData = "command: " + commandArgs[0] + " already exists!";
+        stringData =  commandArgs[0] + " already exists!";
       } else {
         // if so check if the command is a possible commands to register
         if (possibleCommands.has(commandArgs[0])) {
           // if it is, then register the command
           registeredCommands.current.push(commandArgs[0]);
-          stringData = "command: " + commandArgs[0] + " registered";
+          stringData = commandArgs[0] + " registered";
         } else {
           // if the command is not a possible command to register
           stringData =
-            "command: " +
+           
             commandArgs[0] +
             " not a possible command to register";
         }
@@ -120,7 +120,7 @@ export function REPLInput(props: REPLInputProps) {
     // if user is trying to use an invalid command
     else {
       stringData =
-        command + " is not one of the registered commands";
+        commandString + " is not one of the registered commands";
     }
     const myHistoryItem: HistoryItem = {
        data: stringData,
