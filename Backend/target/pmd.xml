@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<pmd xmlns="http://pmd.sourceforge.net/report/2.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pmd.sourceforge.net/report/2.0.0 http://pmd.sourceforge.net/report_2_0_0.xsd" version="6.46.0" timestamp="2023-09-17T14:43:12.962">
-<file name="C:\Users\prana\Documents\GitHub\csv-prlakshm\src\main\java\edu\brown\cs\student\main\Main.java">
-<violation beginline="18" endline="18" begincolumn="25" endcolumn="28" rule="UnusedFormalParameter" ruleset="Best Practices" package="edu.brown.cs.student.main" class="Main" method="Main" variable="args" externalInfoUrl="https://pmd.github.io/pmd-6.46.0/pmd_rules_java_bestpractices.html#unusedformalparameter" priority="3">
-Avoid unused constructor parameters such as 'args'.
-</violation>
-</file>
-</pmd>
