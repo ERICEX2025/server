@@ -251,28 +251,30 @@ export function REPLInput(props: REPLInputProps) {
   };
 
   /**
-   * handles search case after error handling,
+   * Handles search case after error handling,
    * sends the inputted request to the mocked
-   * backend through searchcsv
-   * @param commandString
+   * backend through searchcsv.
+   *
+   * @param args - a list of strings containing any text that followed the command
+   * @return - a promise that resolves to the search results or error message
    */
   const handleSearch: REPLFunction = async (args: Array<string>) => {
     const commandArgs = args;
-    if (commandArgs.length >= 4) {
-      return "It seems like you're trying to enter more than 3 search params. If your identifier or search term have multiple words, wrap them in quotes.";
+    if (commandArgs.length >= 4) { 
+      return "It seems like you're trying to enter more than 3 search params." + 
+      " If your identifier or search term have multiple words, wrap them in quotes.";
     }
-
-    let urlToSearch = "http://localhost:3232/searchcsv";
+    let urlToSearch = "http://localhost:3232/searchcsv"; // default search url; edit based on query params
     const numQueryParams = commandArgs.length;
     switch (numQueryParams) {
-      case 1:
+      case 1: // assume user just entered a search term
         urlToSearch += "?term=" + commandArgs[0];
         break;
-      case 2:
+      case 2: // assume user wants to search without a column identifier
         urlToSearch +=
           "?term=" + commandArgs[0] + "&hasheader=" + commandArgs[1];
         break;
-      case 3:
+      case 3: // user enters a search term, a boolean, and col identifier
         urlToSearch +=
           "?term=" +
           commandArgs[0] +
@@ -281,72 +283,75 @@ export function REPLInput(props: REPLInputProps) {
           "&identifier=" +
           commandArgs[2];
         break;
-      default:
+      default: // if zero query params, original searchcsv url is used
         break;
     }
     const response = await fetch(urlToSearch);
     const responseJson = await response.json();
     const result = await responseJson.result;
-    if (result.includes("error")) {
-      return result;
+    if (result.includes("error")) { // if user receives error msg, 
+      return result;                // only return the error msg
     }
-    return responseJson.data;
+    return responseJson.data; // otherwise, return the 2D array of search results
   };
 
   /**
    * Example function that could be hardcoded by a developer stakeholder
    * to register for their own use.
+   * 
+   * @param args - an array of strings containing any text following the command
+   * @return a promise that resolves to a string of "4"
    */
   const handleAdd2And2: REPLFunction = async (args: Array<string>) => {
     return String(2 + 2);
   };
 
+  /**
+   * Handles user request to access broadband data for a specific county within
+   * a state, or for all of the counties within a state.
+   * 
+   * @param args - a list of strings that followed the user's "broadband" command, 
+   *               i.e. a state and county, or just a state.
+   * @returns - a promise containing an error message, or the broadband data requested by the user.
+   */
   const handleBroadband: REPLFunction = async (args: Array<string>) => {
     const commandArgs = args;
-    if (commandArgs.length > 2) {
-      return "It seems like you're trying to enter more params than state and county. If your state or county have multiple words, wrap them in quotes.";
+    if (commandArgs.length > 2) { // if the user enters more terms than a state and county
+      return "It seems like you're trying to enter more params than state and county." + 
+      " If your state or county have multiple words, wrap them in quotes.";
     }
     let urlToSearch = "http://localhost:3232/broadband";
     const numQueryParams = commandArgs.length;
     switch (numQueryParams) {
-      case 1:
+      case 1: // if only one query param, let that be a state + edit url accordingly
         urlToSearch += "?state=" + commandArgs[0];
         break;
       case 2:
         urlToSearch += "?state=" + commandArgs[0] + "&county=" + commandArgs[1];
         break;
-      default:
+      default: 
         break;
     }
-    console.log("url: " + urlToSearch);
     const response = await fetch(urlToSearch);
-    console.log("response: " + JSON.stringify(response));
     const responseJson = await response.json();
     const result = responseJson.result;
-    console.log("result: " + result);
-
-    if (result.includes("error")) {
-      return result;
+    if (result.includes("error")) {  // if broadband returns an error,
+      return result; // just print the backend's error message
     }
-    return responseJson.data;
-
-    // return JSON.stringify(responseJson);
-
-    //const result = await responseJson.result;     <= THIS SHOULD WORK IDEALLY INSTEAD OF STRINGIFYING
-    //console.log("result: " + result)
-    //console.log("time: " + result.time);
-    // if (result.includes("error")) {
-    //   return result;
-    // }
-    // return responseJson.time;
+    return responseJson.data; // otherwise, return the 2D array of broadband data
   };
 
+  /**
+   * Map that contains all of the possible commands the user can register. The user 
+   * must register these commands using the "register <command>" command before accessing
+   * these.
+   */
   const possibleCommands: Map<string, REPLFunction> = new Map([
     ["load_file", handleLoad],
     ["view", handleView],
     ["search", handleSearch],
     ["mode", handleMode],
-    ["add2and2", handleAdd2And2],
+    ["add2and2", handleAdd2And2], // developer can add their own functions like this
     ["broadband", handleBroadband],
   ]);
 
