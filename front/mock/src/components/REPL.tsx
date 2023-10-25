@@ -1,15 +1,13 @@
 import { useState } from "react";
 import { REPLInput } from "./REPLInput";
 import { REPLHistory } from "./REPLHistory";
-import { Mode } from "../enums";
+import { Mode } from "./enums";
 
-//Extra simple TODO: display html table to newest inputted command and flexbox, tab key
-
-export interface HistoryItem{
+export interface HistoryItem {
   data: string | string[][];
   mode: Mode;
   command: string;
-};
+}
 
 /**
  * top level REPL component that ocntains the REPL Input and History
@@ -22,10 +20,7 @@ export default function REPL() {
   return (
     <div className="repl">
       <REPLHistory history={history}></REPLHistory>
-      <REPLInput
-        history={history}
-        setHistory={setHistory}
-      ></REPLInput>
+      <REPLInput history={history} setHistory={setHistory}></REPLInput>
     </div>
   );
 }

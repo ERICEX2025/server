@@ -1,36 +1,59 @@
-.repl-command-box {
-    flex: display;
-    font-size: 34px;
-    background-color: #1d825d;;
-    text-align: center;
-     margin-top: 10px;
 
-
+.header{
+  color: #f2d8bf;
+  font-size: x-large
 }
-
 .repl-history {
-      white-space: pre-line;
+  /* white-space: pre-line;
   width: 60vw;
   height: 50vh;
   overflow-y: auto;
   border: 1px solid #ccc;
-  text-align: center;
+  text-align: center; */
+  display: flex; 
+  flex-direction: column; /* stack children vertically */
+  align-items: center; /* center children horizontally */
+  /* width: 60vw; */
+  width: max(60vw, 500px);
+  height: 60vh;
+  padding: 10px;
+  overflow-y: auto;
+  white-space: pre-line;
+  background-color: #d8a25f;
+  color: #f2d8bf;
+  
+}
+.repl-input {
+  background-color: #ac6f38;
+  border: 2px solid #ac6f38;
+}
+.repl-command-box {
+    flex: display;
+    font-size: 34px;
+    background-color: #ac6f38;
+    text-align: center;
+    margin-top: 10px;
+    color: #f2d8bf;
+    border: 1px solid #ac6f38;
 }
 
-.table-dimensions {
-  width: 60vw;
-  height: 50vh;
-  text-align: center;
+fieldset {
+  background-color: #d8a25f;
+  border: 1px solid #ac6f38;
 }
 
-.table-body {
+::placeholder {
+  color: #e9c6a3;
+  opacity: 1; /* Firefox */
+}
+/* .table-body {
   display: flex;
   justify-content: center;
   align-items: center;
-}
+} */
 
 .submit-button {
-  background-color: #FF7F50;
-  color: #ffffff;
+  background-color: #ac6f38;
+  color: #f2d8bf;
   margin-top: 10px; 
 }

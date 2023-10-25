@@ -1,1 +1,0 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"edu.brown.cs.student.main"},{"l":"edu.brown.cs.student.main.CSV"},{"l":"edu.brown.cs.student.main.DataObject"}];updateSearchResults();

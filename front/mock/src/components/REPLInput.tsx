@@ -1,6 +1,6 @@
 import "../styles/main.css";
 import { Dispatch, SetStateAction, useState, useRef, FormEvent } from "react";
-import { Mode } from "../enums";
+import { Mode } from "./enums";
 import { ControlledInput } from "./ControlledInput";
 import splitSpacesExcludeQuotes from "quoted-string-space-split";
 import { HistoryItem } from "./REPL";
@@ -83,8 +83,7 @@ export function REPLInput(props: REPLInputProps) {
         // notify the web developer that the function of this command
         // is initialized to undefined in the possibleCommands Map
         if (commandFunction === undefined) {
-          data =
-            "command function for command: " + command + "is undefined";
+          data = "command function for command: " + command + "is undefined";
         } else {
           commandFunction(commandArgs)
             .then((result) => {
@@ -97,13 +96,13 @@ export function REPLInput(props: REPLInputProps) {
               return;
             })
             .catch((error) => {
-             const myHistoryItem: HistoryItem = {
-               data: error,
-               mode: mode.current,
-               command: commandString,
-             };
-             props.setHistory([...props.history, myHistoryItem]);
-             return;
+              const myHistoryItem: HistoryItem = {
+                data: "backend not started",
+                mode: mode.current,
+                command: commandString,
+              };
+              props.setHistory([...props.history, myHistoryItem]);
+              return;
             });
         }
       }
@@ -171,6 +170,7 @@ export function REPLInput(props: REPLInputProps) {
       return response_type + " filepath: " + queryFilePath;
     }
     const filepath = responseJson.csvfile;
+    console.log("success");
     return "successfully loaded " + filepath;
   };
 
@@ -310,12 +310,11 @@ export function REPLInput(props: REPLInputProps) {
    * returns the div for everything input related
    */
   return (
-    <div className="REPL-input">
+    <div className="repl-input">
       {/* Wraps input and button with a form element */}
       <form onSubmit={handleSubmit}>
         {/* Attach the handleSubmit to form submission (enter key and button press) */}
         <fieldset>
-          {" "}
           {/*groups related elements in a form*/}
           <ControlledInput
             value={commandString}
