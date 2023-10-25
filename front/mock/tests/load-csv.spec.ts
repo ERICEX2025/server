@@ -12,7 +12,7 @@ test.beforeEach(async({page}) => {
     await expect(page.getByLabel('Command input')).toBeVisible();
     //Input a load command with no other parameters
     await page.getByLabel("Command input").click();
-    await page.getByLabel("Command input").fill("load_file");
+    await page.getByLabel("Command input").fill("load_file");  
     await page.getByRole("button").click();
 
     //Check the history log for a load command message
