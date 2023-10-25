@@ -38,7 +38,7 @@ export const handleKeyDownApp: KeyboardEventHandler<HTMLDivElement> = (
       const input_box = document.getElementById("box");
       input_box?.blur();
       const history = document.getElementById("hist");
-      history?.focus();
+      history?.blur();
       const doc = document.getElementById("app");
       doc?.focus();
       break;
