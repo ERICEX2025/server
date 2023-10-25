@@ -1,9 +1,12 @@
 package edu.brown.cs.student.main.CSV;
 
+import edu.brown.cs.student.main.DataObject.FactoryFailureException;
 import edu.brown.cs.student.main.Exceptions.IdentifierNotFoundException;
 import edu.brown.cs.student.main.Exceptions.TermNotFoundException;
 import edu.brown.cs.student.main.Exceptions.TermNotFoundInSpecifiedColumnException;
 import edu.brown.cs.student.main.Server.Server;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +25,16 @@ public class CSVSearcher {
     this.hasHeaders = hasHeaders;
     this.columnIdentifier = columnIdentifier;
     this.parsed = Server.getParsedLoadedCSV();
+  }
+
+  public CSVSearcher(CSVParser parser,
+          String searchTerm,
+          Boolean hasHeaders,
+          String columnIdentifier) throws IOException, FactoryFailureException {
+    this.searchTerm = searchTerm;
+    this.hasHeaders = hasHeaders;
+    this.columnIdentifier = columnIdentifier;
+    this.parsed = parser.parse();
   }
 
   /**

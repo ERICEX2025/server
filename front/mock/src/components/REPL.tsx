@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { REPLInput } from "./REPLInput";
 import { REPLHistory } from "./REPLHistory";
-import { Mode } from "../enums";
+import { Mode } from "./enums";
 import { KeyboardEventHandler } from "react";
 
 export interface HistoryItem {
