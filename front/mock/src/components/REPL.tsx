@@ -2,6 +2,7 @@ import { useState } from "react";
 import { REPLInput } from "./REPLInput";
 import { REPLHistory } from "./REPLHistory";
 import { Mode } from "../enums";
+import { KeyboardEventHandler } from "react";
 
 //Extra simple TODO: display html table to newest inputted command and flexbox, tab key
 
@@ -9,6 +10,41 @@ export interface HistoryItem{
   data: string | string[][];
   mode: Mode;
   command: string;
+};
+
+/**
+ * Handles key keyboard shortcuts from the user's keystrokes. The available shortcuts
+ * include "h" to focus on the history, "control" to focus on the input box, "escape"
+ * to remove focus from the input box so the user can use shortcuts/scroll.
+ *
+ * @param event - a keyboard event from user input.
+ */
+export const handleKeyDownApp: KeyboardEventHandler<HTMLDivElement> = (
+  event
+) => {
+  switch (event.key) {
+    case "h":
+      const active_elt = document.activeElement
+      if (!(active_elt === document.getElementById("box"))) {
+        const hist = document.getElementById("hist");
+        hist?.focus();
+      }
+      break;
+    case "Control":
+      const box = document.getElementById("box");
+      box?.focus();
+      break;
+    case "Escape":
+      const input_box = document.getElementById("box");
+      input_box?.blur();
+      const history = document.getElementById("hist");
+      history?.blur();
+      const doc = document.getElementById("app");
+      doc?.focus();
+      break;
+    default:
+      break;
+  }
 };
 
 /**

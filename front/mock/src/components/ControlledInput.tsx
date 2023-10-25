@@ -4,7 +4,7 @@ import { Dispatch, SetStateAction } from "react";
 /**
  * Props taking in the commandString state
  * set commandString setter and ariaLabel
- * for testing and accessibility 
+ * for testing and accessibility
  */
 interface ControlledInputProps {
   value: string;
@@ -13,7 +13,7 @@ interface ControlledInputProps {
 }
 
 /**
- * Special ControlledInput component that wraps the input box. 
+ * Special ControlledInput component that wraps the input box.
  * Input boxes contain state so We want to make sure React is managing that state,
  * @returns the input box
  */
@@ -30,6 +30,7 @@ export function ControlledInput({
       placeholder="Type your command here"
       onChange={(ev) => setValue(ev.target.value)}
       aria-label={ariaLabel}
+      id="box"
     ></input>
   );
 }

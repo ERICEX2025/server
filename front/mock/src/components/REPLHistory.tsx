@@ -108,7 +108,7 @@ export function REPLHistory(props: REPLHistoryProps) {
     };
 
    return (
-     <div className="REPL-history repl-history" aria-label="Command history">
+     <div className="REPL-history repl-history" aria-label="Command history" id="hist" tabIndex={0}>
        <h3>History Log</h3>
        {props.history.map((item, index) => {
          if (typeof item.data === "string") {
