@@ -39,7 +39,7 @@ public class LoadCSVHandler implements Route {
     HashMap<String, Object> toSend = new HashMap<>();
 
     try{
-      FileReader fileReader = new FileReader("back/data/" + request.queryParams("filepath"));
+      FileReader fileReader = new FileReader("data/" + request.queryParams("filepath"));
       CreatorFromRow<List<String>> stringList = new StringList();
       CSVParser<List<String>> parser = new CSVParser<>(fileReader, stringList);
       Server.setParsedLoadedCSV(parser.parse());

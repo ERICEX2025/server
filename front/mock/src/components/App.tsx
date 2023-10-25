@@ -16,12 +16,7 @@ function App() {
     <>
       <div id="app" tabIndex={0} onKeyDown={handleKeyDownApp} >
         <div className="card">
-          <h1>Mock</h1>
-          <h4>
-            register one of these commands load_file &lt;csv-file-path&gt;,
-            view, search &lt;column&gt; &lt;value&gt;, or mode &lt;mode&gt; to
-            start
-          </h4>
+          <h1>REPL</h1>
         </div>
         <div>
           <REPL />

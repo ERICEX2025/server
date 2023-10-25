@@ -4,13 +4,11 @@ import { REPLHistory } from "./REPLHistory";
 import { Mode } from "../enums";
 import { KeyboardEventHandler } from "react";
 
-//Extra simple TODO: display html table to newest inputted command and flexbox, tab key
-
-export interface HistoryItem{
+export interface HistoryItem {
   data: string | string[][];
   mode: Mode;
   command: string;
-};
+}
 
 /**
  * Handles key keyboard shortcuts from the user's keystrokes. The available shortcuts
@@ -58,10 +56,7 @@ export default function REPL() {
   return (
     <div className="repl">
       <REPLHistory history={history}></REPLHistory>
-      <REPLInput
-        history={history}
-        setHistory={setHistory}
-      ></REPLInput>
+      <REPLInput history={history} setHistory={setHistory}></REPLInput>
     </div>
   );
 }
