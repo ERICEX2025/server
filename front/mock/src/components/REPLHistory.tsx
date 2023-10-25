@@ -121,32 +121,35 @@ export function REPLHistory(props: REPLHistoryProps) {
     }
   }, [props.history]);
 
+
   function scrollToBottom(element: HTMLElement) {
     element.scrollTop = element.scrollHeight;
   }
 
-  return (
-    <div>
-      <h3 className="header">History Log</h3>
-      <div
+   return (
+     <div className="REPL-history repl-history" aria-label="Command history" id="hist" tabIndex={0}>
+        <h3 className="header">History Log</h3>
+       <div
         className="repl-history"
         aria-label="Command history"
         ref={historyRef}
       >
-        {props.history.map((item, index) => {
-          if (typeof item.data === "string") {
-            // Item is a string, outputs the idem depending on the item mode
-            return item.mode === Mode.Verbose
-              ? stringVerbose(item.command, item.data, index)
-              : stringBrief(item.data, index);
-          } else {
-            // Item is a 2D array, outputs the idem depending on the item mode
-            return item.mode === Mode.Verbose
-              ? tableVerbose(item.command, item.data, index)
-              : tableBrief(item.data, index);
-          }
-        })}
-      </div>
+       {props.history.map((item, index) => {
+         if (typeof item.data === "string") {
+           // Item is a string, outputs the idem depending on the item mode
+           return item.mode === Mode.Verbose
+             ? stringVerbose(item.command, item.data, index)
+             : stringBrief(item.data, index);
+         } else {
+           // Item is a 2D array, outputs the idem depending on the item mode
+           return item.mode === Mode.Verbose
+             ? tableVerbose(item.command, item.data, index)
+             : tableBrief(item.data, index);
+         }
+       })}
+     </div>
     </div>
   );
+
+
 }
