@@ -15,7 +15,7 @@ In order to run a command, you must register the command first. You can do this 
 - `search`
 - `broadband`
 - `mode`
-- `add2And2`
+- `add2and2`
 
 Once you register these commands, you can use them by entering the command into the terminal along with any other query parameters required for that command, if any. Descriptions of the commands are as follows:
 
@@ -94,7 +94,7 @@ Refreshing our frontend doesn't refresh our backend, because they are started an
 
 # Tests
 
-Our tests are separated into six files within the "tests" package: `App.spec.ts`, `broadband.spec.ts`, `load-csv.spec.ts`, `mode.spec.ts`, `search-csv.spec.ts`, and `view-csv.test.ts`. These are, as the names suggest,
+Our tests are separated into many files within the "tests" package: `App.spec.ts`, `broadband.spec.ts`, `load-csv.spec.ts`, `mode.spec.ts`, `search-csv.spec.ts`, and `view-csv.test.ts`, as well as mocked tests for each of these functions (`mockload-csv.spec.ts`, `mockview-csv.spec.ts`, etc.) These are, as the names suggest,
 correlated to each major function of our REPL. 
 
 Within `App.spec.ts`, our tests involve making sure essentially components of our App are visible and usable. We test:

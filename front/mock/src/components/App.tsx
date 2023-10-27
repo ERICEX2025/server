@@ -13,7 +13,6 @@ function App() {
   useEffect(()=>{
     const doc = document.getElementById("app");
     doc?.focus();
-      console.log("hfjdklf");
   }, [])
   // upon render, the app is in focus
   
