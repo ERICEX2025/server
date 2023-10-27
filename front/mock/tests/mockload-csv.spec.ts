@@ -4,6 +4,7 @@ test.beforeEach(async({page}) => {
     // ... you'd put it here.
     // TODO: Is there something we need to do before every test case to avoid repeating code?
     await page.goto('http://localhost:5173/');
+  
 
   })
 

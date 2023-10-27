@@ -129,6 +129,7 @@ export function REPLHistory(props: REPLHistoryProps) {
    return (
      <div className="REPL-history repl-history" aria-label="History">
        <h3 className="header">History Log</h3>
+       <h4>please register a command to start! <br></br> mode, load_file (csvFilepath), view, search (searchterm, hasHeadersBoolean, optionalColumnIdentifier), broadband (state, optionalCounty)</h4>
        <div
          className="repl-history"
          aria-label="Command history"
