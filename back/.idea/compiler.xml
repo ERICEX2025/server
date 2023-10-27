@@ -6,6 +6,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+      </profile>
+      <profile name="Annotation profile for s0" enabled="true">
+        <sourceOutputDir name="../../../cs0320/repl-eko10-emwang/back/target/generated-sources/annotations" />
+        <sourceTestOutputDir name="../../../cs0320/repl-eko10-emwang/back/target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
         <module name="s0" />
       </profile>
     </annotationProcessing>

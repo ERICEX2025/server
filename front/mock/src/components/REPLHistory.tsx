@@ -127,7 +127,7 @@ export function REPLHistory(props: REPLHistoryProps) {
   }
 
    return (
-     <div className="REPL-history repl-history" aria-label="Command history">
+     <div className="REPL-history repl-history" aria-label="History">
        <h3 className="header">History Log</h3>
        <div
          className="repl-history"

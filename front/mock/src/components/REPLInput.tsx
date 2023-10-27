@@ -5,6 +5,7 @@ import { ControlledInput } from "./ControlledInput";
 import splitSpacesExcludeQuotes from "quoted-string-space-split";
 import { HistoryItem } from "./REPL";
 import { REPLFunction } from "./REPLFunction";
+import { searchcsv, loadcsv, viewcsv } from "./mockedJson";
 
 /**
  * REPL Input component is in charge of dealing with everything
@@ -282,6 +283,68 @@ export function REPLInput(props: REPLInputProps) {
   };
 
   /**
+   * handles view case after error handling,
+   * sends the inputted request to the
+   * backend through viewcsv
+   *
+   * @param args - no params, but takes in args for consistency and future extensibility
+   * @return - a promise that resolves to the view results or error message
+   */
+  const handleMock: REPLFunction = async (args: Array<string>) => {
+    const commandArgs = args;
+    let outputMsg: string | string[][];
+
+    const command = args[0];
+    if(command === "load_file"){
+      if (commandArgs.length != 2) {
+        outputMsg =
+          "Please provide 1 argument for load: load_file <csv-file-path>";
+      } else {
+        outputMsg = loadcsv(commandArgs[1]);
+      }
+    }
+    else if(command === "view"){
+      if (commandArgs.length > 1) {
+        outputMsg = "view does not take any arguments!";
+        } else {
+        outputMsg = viewcsv();
+        }
+      }
+    else if(command === "search"){
+      let column = "";
+      let value = "";
+      let hasHeader = "";
+      if (commandArgs.length > 4) {
+        outputMsg = "please give a max of 3 arguments for search.";
+      } else if (commandArgs.length < 2) {
+        outputMsg =
+          "please provide a search term and optional column identifier for search.";
+      } else {
+        value = commandArgs[1];
+        if (commandArgs.length == 4) {
+          column = commandArgs[1];
+          value = commandArgs[2];
+          hasHeader = commandArgs[3];
+        }
+        if (commandArgs.length == 3) {
+          column = commandArgs[1];
+          value = commandArgs[2];
+        }
+        outputMsg = searchcsv(column, value, hasHeader);
+      }
+    }
+    else{
+      outputMsg =
+        "Command " +
+        commandString +
+        " not recognized, try mock load_file <csv-file-path>, view, search <column> <value> or mode <mode>";
+    }
+
+    return outputMsg;
+
+  };
+
+  /**
    * Example function that could be hardcoded by a developer stakeholder
    * to register for their own use.
    *
@@ -303,7 +366,8 @@ export function REPLInput(props: REPLInputProps) {
     ["view", handleView],
     ["search", handleSearch],
     ["broadband", handleBroadband],
-    ["add2and2", handleAdd2And2], // developer can add their own functions like this
+    ["add2and2", handleAdd2And2],
+    ["mock", handleMock], // developer can add their own functions like this
   ]);
 
   /**

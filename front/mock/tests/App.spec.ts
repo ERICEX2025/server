@@ -26,7 +26,6 @@ test('on page load, i see a button', async ({ page }) => {
 });
 
 test('after I click the button, the command is pushed to history', async ({ page }) => {
-  // TODO WITH TA: Fill this in to test your button counter functionality!
   await page.getByLabel("Command input").click();
   await page.getByLabel("Command input").fill("sample response");
   await page.getByRole("button").click();

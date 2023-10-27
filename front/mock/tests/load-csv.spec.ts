@@ -1,23 +1,26 @@
 import { test, expect } from '@playwright/test';
 
 test.beforeEach(async({page}) => {
-    // ... you'd put it here.
-    // TODO: Is there something we need to do before every test case to avoid repeating code?
-    await page.goto('http://localhost:5173/');
+  await page.goto("http://localhost:5173/");
+  //register the load command
+  await page.getByLabel("Command input").click();
+  await page.getByLabel("Command input").fill("register load_file");
+  await page.getByRole("button").click();
+})
 
-  })
 
+  test('after I type into the input bar "load_file" after registering, the command is recognized', async ({ page }) => {
+    await expect(page.getByLabel("Command input")).toBeVisible();
 
-  test('after I type into the input bar "load", the command is recognized', async ({ page }) => {
-    await expect(page.getByLabel('Command input')).toBeVisible();
     //Input a load command with no other parameters
     await page.getByLabel("Command input").click();
-    await page.getByLabel("Command input").fill("load_file");  
+    await page.getByLabel("Command input").fill("load_file");
     await page.getByRole("button").click();
 
     //Check the history log for a load command message
-    const bad_load = "Please provide 1 argument for load: load_file <csv-file-path>"
-    await expect(page.getByLabel("Item 0")).toContainText(bad_load);
+    const bad_load =
+      "error_bad_datasource, CSV File not found in our data folder: undefined filepath: undefined";
+    await expect(page.getByLabel("Item 1")).toContainText(bad_load);
     await expect(page.getByLabel("Command input")).toBeEmpty();
   })
 
@@ -30,8 +33,9 @@ test.beforeEach(async({page}) => {
     await page.getByRole("button").click();
   
     //Evaluate the response
-    const bad_load = "can not recognize the csv filepath"
-    await expect(page.getByLabel("Item 0")).toContainText(bad_load);
+    const bad_load =
+      "error_bad_datasource, CSV File not found in our data folder: data/not_valid.csv filepath: data/not_valid.csv";
+    await expect(page.getByLabel("Item 1")).toContainText(bad_load);
     //await expect(page.getByLabel('Command input')).toHaveValue(mock_input)
   });
 
@@ -40,9 +44,11 @@ test.beforeEach(async({page}) => {
 
     //Input a load command with a bogus pathname
     await page.getByLabel("Command input").click();
-    await page.getByLabel("Command input").fill("load_file stardata.csv");
+    await page.getByLabel("Command input").fill("load_file ri_income.csv");
     await page.getByRole("button").click();
 
-    await expect(page.getByLabel("Item 0")).toContainText("successfully loaded stardata.csv");
+    await expect(page.getByLabel("Item 1")).toContainText(
+      "successfully loaded ri_income.csv"
+    );
 
   });
