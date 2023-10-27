@@ -25,15 +25,26 @@ function setFile(filename: string) {
 }
 
 export const stateToBroadband: Map<string, string[][]> = new Map([
-  ["Illinois", [["Kankakee County", ": 71.8"], ["Cook County", ": 84.8"], ["Lake County", ": 93.6"], ["DuPage County", "47.5"]]],
-  ["Rhode Island", [["Providence County", ": 78.8"], ["Kent County", "78.5"]]],
   [
-    'Illinois "Cook County"',
+    "Illinois",
     [
-      ["Cook County, Illinois", ": 84.8"],
+      ["Kankakee County, Illinois: 83.1"],
+      ["Cook County, Illinois: 84.8"],
+      ["Lake County, Illinois: 90.2"],
+      ["Tazewell County, Illinois: 82.4"],
     ],
   ],
-  ["FakeState", [["does not exist"]]]
+  [
+    "Rhode Island",
+    [
+      ["Providence County, Rhode Island: 85.4"],
+      ["Kent County, Rhode Island: 84.1"],
+      ["Newport County, Rhode Island: 90.1"],
+      ["Washington County, Rhode Island: 92.8"],
+    ],
+  ],
+  ['Illinois "Cook County"', [["Cook County, Illinois", ": 84.8"]]],
+  ["FakeState", [["error_bad_request,FakeState is not a valid state"]]],
 ]);
 
 export const CSVsearchStardataToDataMap: Map<string, string[][]> = new Map([
@@ -232,11 +243,21 @@ export function searchcsv(column: string, value: string, hasHeader: string) {
     if(county === "Cook County"){
       data = stateToBroadband.get('Illinois "Cook County"');
     }
+    else if(county === "Cook"){
+      data = "error_bad_request, Cook county does not exist";
+    }
     else{
       data = stateToBroadband.get(state);
     }
     if(data === undefined){
-      data = "error";
+      if(state === "Cook County"){
+        data = "error_bad_request,Cook County is not a valid state"
+      }
+      else if (state === "FakeState") {
+        data = "error_bad_request,FakeState is not a valid state";
+      } else {
+        data = "error_bad_request, Cook county does not exist";
+      }
     }
     return data
   }
