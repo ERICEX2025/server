@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { REPLInput } from "./REPLInput";
 import { REPLHistory } from "./REPLHistory";
-import { Mode } from "./enums";
+import { Mode } from "./exports/enums";
 import { KeyboardEventHandler } from "react";
 
 export interface HistoryItem {
@@ -22,7 +22,7 @@ export const handleKeyDownApp: KeyboardEventHandler<HTMLDivElement> = (
 ) => {
   switch (event.key) {
     case "h":
-      const active_elt = document.activeElement
+      const active_elt = document.activeElement;
       if (!(active_elt === document.getElementById("box"))) {
         const hist = document.getElementById("hist");
         hist?.focus();

@@ -1,11 +1,11 @@
 import "../styles/main.css";
 import { Dispatch, SetStateAction, useState, useRef, FormEvent } from "react";
-import { Mode } from "./enums";
+import { Mode } from "./exports/enums";
 import { ControlledInput } from "./ControlledInput";
 import splitSpacesExcludeQuotes from "quoted-string-space-split";
 import { HistoryItem } from "./REPL";
 import { REPLFunction } from "./REPLFunction";
-import { searchcsv, loadcsv, viewcsv, broadband } from "./mockedJson";
+import { searchcsv, loadcsv, viewcsv, broadband } from "./exports/mockedJson";
 
 /**
  * REPL Input component is in charge of dealing with everything
@@ -295,22 +295,20 @@ export function REPLInput(props: REPLInputProps) {
     let outputMsg: string | string[][];
 
     const command = args[0];
-    if(command === "load_file"){
+    if (command === "load_file") {
       if (commandArgs.length != 2) {
         outputMsg =
           "Please provide 1 argument for load: load_file <csv-file-path>";
       } else {
         outputMsg = loadcsv(commandArgs[1]);
       }
-    }
-    else if(command === "view"){
+    } else if (command === "view") {
       if (commandArgs.length > 1) {
         outputMsg = "view does not take any arguments!";
-        } else {
+      } else {
         outputMsg = viewcsv();
-        }
       }
-    else if(command === "search"){
+    } else if (command === "search") {
       let column = "";
       let value = "";
       let hasHeader = "";
@@ -332,18 +330,19 @@ export function REPLInput(props: REPLInputProps) {
         }
         outputMsg = searchcsv(column, value, hasHeader);
       }
-    }
-    else if(command === "broadband"){
-      if(args.length === 1){
-        outputMsg = "please enter a state and optional county"
-      }
-      else if (args.length === 2) {
+    } else if (command === "broadband") {
+      if (args.length === 1) {
+        outputMsg = "please enter a state and optional county";
+      } 
+      else if (args.length > 3) {
+        outputMsg =
+          "It seems like you're trying to enter more params than state and county. If your state or county have multiple words, wrap them in quotes.";
+      } else if (args.length === 2) {
         outputMsg = broadband(commandArgs[1], "");
       } else {
         outputMsg = broadband(commandArgs[1], commandArgs[2]);
       }
-    }
-    else{
+    } else {
       outputMsg =
         "Command " +
         commandString +
@@ -376,7 +375,7 @@ export function REPLInput(props: REPLInputProps) {
     ["add2and2", handleAdd2And2],
     ["mock", handleMock], // developer can add their own functions like this
   ]);
-  
+
   /**
    * returns the div for everything input related
    */

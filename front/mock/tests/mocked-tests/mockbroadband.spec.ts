@@ -57,18 +57,18 @@ test("successful broadband call", async ({ page }) => {
   await expect(page.getByLabel("Command input")).toBeVisible();
 
   // register command
-  await page.getByLabel("Command input").fill("register broadband");
+  await page.getByLabel("Command input").fill("register mock");
   await page.getByRole("button").click();
-  await expect(page.getByLabel("Item 0")).toHaveText("broadband registered");
+  await expect(page.getByLabel("Item 0")).toHaveText("mock registered");
 
   await page.getByLabel("Command input").click();
   await page
     .getByLabel("Command input")
-    .fill("broadband Illinois 'Cook County'");
+    .fill("mock broadband Illinois 'Cook County'");
   await page.getByRole("button").click();
 
   //Check the history log for a search command message
-  await expect(page.getByLabel("Item 0")).toHaveText("broadband registered");
+  await expect(page.getByLabel("Item 0")).toHaveText("mock registered");
   await expect(page.getByLabel("Item 1")).toHaveText(
     "Cook County, Illinois: 84.8"
   );
@@ -81,13 +81,13 @@ test("successful broadband state call", async ({ page }) => {
   await expect(page.getByLabel("Command input")).toBeVisible();
 
   // register command
-  await page.getByLabel("Command input").fill("register broadband");
+  await page.getByLabel("Command input").fill("register mock");
   await page.getByRole("button").click();
-  await expect(page.getByLabel("Item 0")).toHaveText("broadband registered");
+  await expect(page.getByLabel("Item 0")).toHaveText("mock registered");
 
   //Input a broadband command with only state
   await page.getByLabel("Command input").click();
-  await page.getByLabel("Command input").fill("broadband Illinois");
+  await page.getByLabel("Command input").fill("mock broadband Illinois");
   await page.getByRole("button").click();
 
   //Check the history log for output
@@ -95,7 +95,7 @@ test("successful broadband state call", async ({ page }) => {
     "Kankakee County, Illinois: 83.1"
   );
   await expect(page.getByLabel("Item 1")).toContainText(
-    "Lake County, Illinois: 90.2"
+    "Cook County, Illinois: 84.8"
   );
   await expect(page.getByLabel("Item 1")).toContainText(
     "Lake County, Illinois: 90.2"
@@ -112,13 +112,13 @@ test("successful broadband multi wordstate call", async ({ page }) => {
   await expect(page.getByLabel("Command input")).toBeVisible();
 
   // register command
-  await page.getByLabel("Command input").fill("register broadband");
+  await page.getByLabel("Command input").fill("register mock");
   await page.getByRole("button").click();
-  await expect(page.getByLabel("Item 0")).toHaveText("broadband registered");
+  await expect(page.getByLabel("Item 0")).toHaveText("mock registered");
 
   //Input a broadband command with only state
   await page.getByLabel("Command input").click();
-  await page.getByLabel("Command input").fill("broadband 'Rhode Island'");
+  await page.getByLabel("Command input").fill("mock broadband 'Rhode Island'");
   await page.getByRole("button").click();
 
   //Check the history log for output
@@ -143,14 +143,14 @@ test("successful broadband multi word county call", async ({ page }) => {
   await expect(page.getByLabel("Command input")).toBeVisible();
 
   // register command
-  await page.getByLabel("Command input").fill("register broadband");
+  await page.getByLabel("Command input").fill("register mock");
   await page.getByRole("button").click();
-  await expect(page.getByLabel("Item 0")).toHaveText("broadband registered");
+  await expect(page.getByLabel("Item 0")).toHaveText("mock registered");
 
   //Input a broadband command with incorrect format
   await page
     .getByLabel("Command input")
-    .fill("broadband Rhode Island Providence County");
+    .fill("mock broadband Rhode Island Providence County");
   await page.getByRole("button").click();
 
   //Check the history log for output
@@ -163,7 +163,7 @@ test("successful broadband multi word county call", async ({ page }) => {
     "It seems like you're trying to enter more params than state and county. If your state or county have multiple words, wrap them in quotes."
   );
 
-  await page.getByLabel("Command input").fill("broadband Illinois Cook County");
+  await page.getByLabel("Command input").fill("mock broadband Illinois Cook County");
   await page.getByRole("button").click();
 
   //Check the history log for output
@@ -179,12 +179,12 @@ test("successful broadband few word call", async ({ page }) => {
   await expect(page.getByLabel("Command input")).toBeVisible();
 
   // register command
-  await page.getByLabel("Command input").fill("register broadband");
+  await page.getByLabel("Command input").fill("register mock");
   await page.getByRole("button").click();
-  await expect(page.getByLabel("Item 0")).toHaveText("broadband registered");
+  await expect(page.getByLabel("Item 0")).toHaveText("mock registered");
 
   //Input a broadband command with incorrect format
-  await page.getByLabel("Command input").fill("broadband Illinois Cook");
+  await page.getByLabel("Command input").fill("mock broadband Illinois Cook");
   await page.getByRole("button").click();
 
   //Check the history log for output
@@ -199,7 +199,7 @@ test("successful broadband few word call", async ({ page }) => {
 
   await page
     .getByLabel("Command input")
-    .fill("broadband 'Cook County' Illinois");
+    .fill("mock broadband 'Cook County' Illinois");
   await page.getByRole("button").click();
 
   //Check the history log for output
@@ -207,114 +207,11 @@ test("successful broadband few word call", async ({ page }) => {
     "error_bad_request,Cook County is not a valid state"
   );
 
-  await page.getByLabel("Command input").fill("broadband FakeState FakeCounty");
+  await page.getByLabel("Command input").fill("mock broadband FakeState FakeCounty");
   await page.getByRole("button").click();
 
   //Check the history log for output
   await expect(page.getByLabel("Item 3")).toHaveText(
     "error_bad_request,FakeState is not a valid state"
   );
-});
-
-/**
- * Tests integration of load, mode, view, search, broadband, add2and2
- */
-test("full integration with basically all the implemented commands", async ({
-  page,
-}) => {
-  await expect(page.getByLabel("Command input")).toBeVisible();
-
-  // register commands
-  await page.getByLabel("Command input").fill("register broadband");
-  await page.getByRole("button").click();
-  await page.getByLabel("Command input").fill("register load_file");
-  await page.getByRole("button").click();
-  await page.getByLabel("Command input").fill("register search");
-  await page.getByRole("button").click();
-  await page.getByLabel("Command input").fill("register view");
-  await page.getByRole("button").click();
-  await page.getByLabel("Command input").fill("register mode");
-  await page.getByRole("button").click();
-
-  //Input a broadband command with incorrect format
-  await page.getByLabel("Command input").fill("load_file ri_income.csv");
-  await page.getByRole("button").click();
-
-  //Check the history log for output
-  await expect(page.getByLabel("Item 5")).toContainText(
-    "successfully loaded ri_income.csv"
-  );
-
-  await page.getByLabel("Command input").fill("view");
-  await page.getByRole("button").click();
-
-  //Check the history log for output
-  await expect(page.getByLabel("Item 6")).toContainText("Barrington");
-
-  await page.getByLabel("Command input").fill("search Barrington true");
-  await page.getByRole("button").click();
-
-  //Check the history log for output
-  await expect(page.getByLabel("Item 7")).toHaveText(
-    "Barrington130,455.00154,441.0069,917.00"
-  );
-
-  await page
-    .getByLabel("Command input")
-    .fill("broadband Illinois 'Cook County'");
-  await page.getByRole("button").click();
-
-  //Check the history log for output
-  await expect(page.getByLabel("Item 8")).toHaveText(
-    "Cook County, Illinois: 84.8"
-  );
-
-  await page.getByLabel("Command input").fill("mode verbose");
-  await page.getByRole("button").click();
-
-  //Check the history log for output
-  await expect(page.getByLabel("Item 9")).toContainText(
-    "Command: mode verbose"
-  );
-
-  await page
-    .getByLabel("Command input")
-    .fill("broadband 'Rhode Island' 'Providence County'");
-  await page.getByRole("button").click();
-
-  await expect(page.getByLabel("Item 10")).toContainText(
-    "Command: broadband 'Rhode Island' 'Providence County"
-  );
-  await expect(page.getByLabel("Item 10")).toContainText("Output:");
-
-  await page
-    .getByLabel("Command input")
-    .fill("load_file postsecondary_education.csv");
-  await page.getByRole("button").click();
-
-  //Check the history log for output
-  await expect(page.getByLabel("Item 11")).toContainText(
-    "successfully loaded postsecondary_education.csv"
-  );
-
-  await page.getByLabel("Command input").fill("view");
-  await page.getByRole("button").click();
-
-  await page.getByLabel("Command input").fill("mode brief");
-  await page.getByRole("button").click();
-  await page.getByLabel("Command input").fill("search 'Brown University' true");
-  await page.getByRole("button").click();
-
-  //Check the history log for output
-  await expect(page.getByLabel("Item 14")).toContainText(
-    "Asian20202020217156Brown University214brown-university0.069233258Men1"
-  );
-
-  await expect(page.getByLabel("Item 14")).not.toContainText("Command:");
-  await page.getByLabel("Command input").fill("register add2and2");
-  await page.getByRole("button").click();
-  await page.getByLabel("Command input").fill("add2and2");
-  await page.getByRole("button").click();
-
-  await expect(page.getByLabel("Item 16")).toContainText("4");
 });

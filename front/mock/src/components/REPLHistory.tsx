@@ -1,7 +1,7 @@
 import "../styles/main.css";
-import { Mode } from "./enums";
+import { Mode } from "./exports/enums";
 import { HistoryItem } from "./REPL";
-import React, { useRef, useEffect } from "react"; 
+import React, { useRef, useEffect } from "react";
 
 /**
  * REPLHistory Component that is in charge of displaying the command input and output history
@@ -121,38 +121,39 @@ export function REPLHistory(props: REPLHistoryProps) {
     }
   }, [props.history]);
 
-
   function scrollToBottom(element: HTMLElement) {
     element.scrollTop = element.scrollHeight;
   }
 
-   return (
-     <div className="REPL-history repl-history" aria-label="History">
-       <h3 className="header">History Log</h3>
-       <h4>please register a command to start! <br></br> mode, load_file (csvFilepath), view, search (searchterm, hasHeadersBoolean, optionalColumnIdentifier), broadband (state, optionalCounty)</h4>
-       <div
-         className="repl-history"
-         aria-label="Command history"
-         ref={historyRef}
-         id="hist"
-         tabIndex={0}
-       >
-         {props.history.map((item, index) => {
-           if (typeof item.data === "string") {
-             // Item is a string, outputs the idem depending on the item mode
-             return item.mode === Mode.Verbose
-               ? stringVerbose(item.command, item.data, index)
-               : stringBrief(item.data, index);
-           } else {
-             // Item is a 2D array, outputs the idem depending on the item mode
-             return item.mode === Mode.Verbose
-               ? tableVerbose(item.command, item.data, index)
-               : tableBrief(item.data, index);
-           }
-         })}
-       </div>
-     </div>
-   );
-
-
+  return (
+    <div className="REPL-history repl-history" aria-label="History">
+      <h3 className="header">History Log</h3>
+      <h4>
+        please register a command to start! <br></br> mode, load_file
+        (csvFilepath), view, search (searchterm, hasHeadersBoolean,
+        optionalColumnIdentifier), broadband (state, optionalCounty)
+      </h4>
+      <div
+        className="repl-history"
+        aria-label="Command history"
+        ref={historyRef}
+        id="hist"
+        tabIndex={0}
+      >
+        {props.history.map((item, index) => {
+          if (typeof item.data === "string") {
+            // Item is a string, outputs the idem depending on the item mode
+            return item.mode === Mode.Verbose
+              ? stringVerbose(item.command, item.data, index)
+              : stringBrief(item.data, index);
+          } else {
+            // Item is a 2D array, outputs the idem depending on the item mode
+            return item.mode === Mode.Verbose
+              ? tableVerbose(item.command, item.data, index)
+              : tableBrief(item.data, index);
+          }
+        })}
+      </div>
+    </div>
+  );
 }
