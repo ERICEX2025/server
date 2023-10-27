@@ -35,6 +35,8 @@ Once you register these commands, you can use them by entering the command into 
   - In "verbose" mode, each command as well as its respective result is displayed.
 - `add2And2`
   - This command is a dummy command that serves as an example of how a developer could implement their own functions and inject them into our REPL, as long as their function implements REPLFunction. The command, when called, simply returns the result of 2+2 as a string. There are no other parameters, and no other results.
+- `mock`
+  - This command allows the user to switch to mode mock. Commands run using this (e.g. `mock load_file ri_income`) will return mocked responses. This is purely for testing purposes.
 
 
 # Design choices
@@ -64,41 +66,91 @@ Within `back`, our `src` folder contains two main folders: `CSV`, `DataObject`, 
 
 **Design:**
 
-The main new feature of our REPL is the use of asynchronous functions that all implement the `REPLFunction` interface.
+- To fulfill User Story 2, the main new feature of our REPL is the use of asynchronous functions that all implement the `REPLFunction` interface. This is so that we can genericize our calls to whatever command function the user wants by calling `commandFunction(commandString)` in REPLInput. Our `REPLFunction`s are all asynchronous so that they return Promises, allowing us to wait till the information is accessed and returned from the backend before calling `.then` on the output.
+  - We also introduced a map and list for registration. Our map contains all of the functions a user can possibly register, and maps from the name of the command to the actual function (e.g. `"load_file"` maps to `handleLoad`.) Our list contains all of the functions the user has already registered. When a user registers a command, we check whether the command exists as a key in our map. If it is, we check if the command exists in the list. If not, we add the command to the list of registered commands. Once the user has registered a command, they can call the command normally, and our map will return the command to call to our `handleSubmit` method. We did this for a smooth command registration process.
 
-- accessibility colors
-- scroll (most recent)
-- zoom should be fine
-- shortcuts
-- map for registration
-- genericizing replfunction
+- To fulfill User Story 1, we made a lot of changes to our REPL's design, including:
+  - Accessibility colors: We changed the color scheme of our REPL to be more accessible using higher contrast colors, using a website with accessible color palettes.
+  - When the user enters enough commands that the command history begins to scroll, the command history will always scroll to the most recent output to make the results easier to read and easier to navigate to using a screenreader.
+  - We added aria labels to all of the important divs within our app, as well as the `REPLHistory`- and `REPLInput`-related components so that the user can navigate to each one using a screenreader. All of the outputs within our `REPLHistory` also have aria labels (`Item 0`, `Item 1`, `Item 2`, etc.) so that they can be accessed easily.
+  - We changed our css files by editing the flex display, so that resizing the window will adjust the proportions of the screen smoothly.
+  - We added four main **keyboard shortcuts**:
+    - On render, the App's div will be selected. From here,
+    - `h` selects the history log. The user can use the up and down arrow keys to scroll through the log.
+    - `Control` selects the input box, into which the user can type directly.
+    - `Esc` deselects the history log or input box and reselects the App. This is mainly so that if the user is in the input box, they can escape out of it to continue using keyboard shortcuts.
+    - `Enter` when the input box is selected will hit the submit button. This is so that the user doesn't have to use a touchpad or mouse to access the button.
+    - Whenever the App is selected (when the user presses `Esc`, or upon first render), the user can scroll up and down the whole page using the up and down arrow keys. This ensures that zooming in significantly will still allow the user to navigate and use the program; they can use the arrow keys as well as our keyboard shortcuts and fully access the program. 
 
+- To mock our data, we have a mock command within our possible commands list. This mock command uses if statements to determine what mocked data from our `mockedJson.tsx` should be returned. This was for frontend testing purposes.
 
-A data structure we introduced for REPL was our `HistoryItem` that we use extensively to track our history. Our history is a list of `HistoryItem`s. These `HistoryItem` are essentially tuples that include the command submitted by the user in the input box, as well as the result of that command, as determined by our `REPLInput`. We decided to make a unique interface for these command/result pairs so that we would have an easier time switching between modes and deciding what to display, since we could call on the specific property (command and/or result) to be included in the history depending on which mode the user was currently in. For example, given that an `HistoryItem` is named `commandResultPair`, we use `commandResultPair.command` to obtain the saved command, and `commandResultPair.data` to obtain the (unformatted) result.
-
-We decided to make the data of our `HistoryItem` a 2D array of strings because this would make it easier for us to format our strings into an HTML table by using nested map functions (as if they were for-loops) in our `REPLHistory` to display the results. Our notable shared state between our `REPL`, `REPLHistory`, and `REPLInput` is the history (list of InputObjects of commands/results). 
-
+- A data structure we introduced for REPL was our `HistoryItem` that we use extensively to track our history. Our history is a list of `HistoryItem`s. These `HistoryItem` are essentially tuples that include the command submitted by the user in the input box, as well as the result of that command, as determined by our `REPLInput`. We decided to make a unique interface for these command/result pairs so that we would have an easier time switching between modes and deciding what to display, since we could call on the specific property (command and/or result) to be included in the history depending on which mode the user was currently in. For example, given that an `HistoryItem` is named `commandResultPair`, we use `commandResultPair.command` to obtain the saved command, and `commandResultPair.data` to obtain the (unformatted) result.
+- We decided to make the data of our `HistoryItem` a 2D array of strings because this would make it easier for us to format our strings into an HTML table by using nested map functions (as if they were for-loops) in our `REPLHistory` to display the results. Our notable shared state between our `REPL`, `REPLHistory`, and `REPLInput` is the history (list of InputObjects of commands/results). 
 
 
 # Errors/bugs
 
-None
-- refreshing start doesn't restart back
+Refreshing our frontend doesn't refresh our backend, because they are started and run on separate local host ports. Therefore, in order to clear the loaded data in our backend, the server must be restarted. We would fix this by using different session IDs, probably, given more time.
 
 # Tests
 
-Our tests are separated into three files within the "tests" package: `mock-load.test.ts`, `mock-search.test.ts`, and `mock-view.test.ts`. These are, as the names suggest,
-correlated to each major function of our mock server (load, view, and search).
+Our tests are separated into six files within the "tests" package: `App.spec.ts`, `broadband.spec.ts`, `load-csv.spec.ts`, `mode.spec.ts`, `search-csv.spec.ts`, and `view-csv.test.ts`. These are, as the names suggest,
+correlated to each major function of our REPL. 
 
-Within `mock-load.test.ts`, our tests involve the load and mode commands. We test an empty input, miscellaneous input, switching modes, loading a normal csv, loading a csv that exists but is empty, loading multiple csvs, failure to load a csv, loading a file that doesn't exist, loading a file with the wrong number of arguments, calling `load_file` with no file name, and unsuccessful loading followed by successful loading. All of these are to ensure that we have ample protection against bad user input or multiple successive inputs, in the form of helpful error messages. We also throw in a lot of mode switches throughout our tests to make sure all our ouputs are as they should be, and that mode switching doesn't mess up the expected outputs.
+Within `App.spec.ts`, our tests involve making sure essentially components of our App are visible and usable. We test:
+- visibility of our input box
+- visibility of our button
+- that clicking the button causes something to appear in the history
+- that the history will continue to get updated with more button presses
+- that text can be entered into the input box
 
-Within `mock-view.test.ts`, our tests involve the load, mode, and view commands. We test a successful view, viewing an empty csv, viewing a csv with one row or one column, viewing a very horizontally-long csv that requires a horizontal scroll but is otherwise normal, viewing a csv after successful/unsuccessful loads, viewing the most recent csv when multiple csvs are loaded successfully, trying to view a csv before loading one, calling view with extraneous arguments, and viewing a csv after an unsuccessful load. Again, we have a lot of mode switches throughout these tests to make sure our command/result pairs are accurate, and that mode switching doesn't alter our expected output beyond what we expect. These tests all ensure that the user should be viewing what they expect when they call the view, or if they don't, that they are told why when they receive an error message.
+Within `load-csv.spec.ts`, our tests involve the `load_file` command. We test:
+- registering load_file
+- inputting only "load_file"
+- inputting "load_file" with a fake csv file
+- inputting "load_file with a real csv file
 
-Within `mock-search.test.ts`, our tests involve all four commands: load, mode, view, and search. We test a successful searching from a loaded csv and no column given, searching an empty csv, searching a csv with only one row and only one col, searching a really wide file, searching a csv after failing to load a different csv, searching after multiple files are successfully loaded, searching after viewing and viewing after searching, using a search term with multiple words, the user trying to search before loading, the user using too many parameters to search, the user just typing "search" with no identifiers/values, failure to load a file and then trying to search, and large combinations of load, view, search, and mode. These are to ensure that using all of these commands together will not crash the program or produce unexpected output. 
+Within `view-csv.spec.ts`, our tests involve the `view` command. We test:
+- registering view
+- view with unsuccessful load
+- view without any load
+- multiple calls to view
+- multiple files loaded, then viewed
+
+Within `search-csv.spec.ts`, our tests involve the `search` command. We test:
+- registering search
+- search without any load
+- successful load followed by unsuccessful load followed by search
+- integration between search, view, and mode commands
+- searching without a hasHeader boolean
+- searching without a column identifier
+- searching with a name column identifier, where the name has multiple words and the search val has multiple words
+- integration between search and view
+- multiple searches
+- search with no result
+- search with column index as identifier
+- search with true/false boolean
+
+Within `mode.spec.ts`, our tests involve the `mode` command. We test:
+- registering mode
+- switching to brief mode
+- switching to verbose mode
+- switching between modes with other commands in between
+
+Within `broadband.spec.ts`, our tests involve the `broadband.spec.ts` command, along with all of our other commands. We test:
+- registering broadband
+- successful broadband of one county
+- successful broadband of one state
+- successful broadband of multi-word state
+- unsuccessful broadband (too many parameters/incorrectly formatted params)
+- unsuccessful broadband of incorrectly formatted county
+- unsuccessful broadband of too few params (another incorrectly formatted county)
+- unsuccessful broadband of a fake state and fake county
+- integration of all possible commands including load_file, search, view, mode, and broadband
+
 
 # How to run tests
 
-Our tests are separated into three files within the "tests" package: `mock-load.test.ts`, `mock-search.test.ts`, and `mock-view.test.ts`. To run these tests, you can navigate to our main directory `mock-emwang-kli154` and type in
-`npx playwright test` into the terminal to run all of the tests in our tests package at once. Occasionally, ou may come across errors when running these because the server refuses to
-connect. All of the tests pass individually, but since running all of them at once may produce errors, for any test that doesn't pass, please navigate to that test in its
-file and click the green play button--the test should then pass.
+Start the backend by running the `Server.java` file in `back/src/Server`. Then, you can run the command `npx playwright test` in the terminal.
+
+Some of these tests may fail because they involve load failures, and there are load failure tests in several files (e.g. `load-csv.spec.ts` and `search-csv.spec.ts`). We do not refresh the backend after every test, so the leftover loaded files from previous tests may cause current tests to fail. For tests involving load failures, we recommend restarting the backend and running those tests individually using the green play button to verify that they do all pass.

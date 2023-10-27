@@ -217,7 +217,7 @@ test("successful broadband few word call", async ({ page }) => {
 });
 
 /**
- * Tests integration of load, mode, view, search, broadband
+ * Tests integration of load, mode, view, search, broadband, add2and2
  */
 test("full integration with basically all the implemented commands", async ({
   page,
@@ -315,6 +315,12 @@ test("full integration with basically all the implemented commands", async ({
   await expect(page.getByLabel("Item 14")).not.toContainText(
     "Command:"
   );
+   await page.getByLabel("Command input").fill("register add2and2");
+   await page.getByRole("button").click();
+   await page.getByLabel("Command input").fill("add2and2");
+   await page.getByRole("button").click();
+
+   await expect(page.getByLabel("Item 16")).toContainText("4");
 
   
 });
