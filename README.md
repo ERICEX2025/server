@@ -148,6 +148,8 @@ Within `broadband.spec.ts`, our tests involve the `broadband.spec.ts` command, a
 - unsuccessful broadband of a fake state and fake county
 - integration of all possible commands including load_file, search, view, mode, and broadband
 
+We chose not to unit test using Jest because the nature of our frontend lends itself to its "backend" being tested through our frontend/end-to-end tests. We consulted several TAs about this as well as posted about this on Ed, as well as consulted several other pairs of students, and we were told by essentially all of them that we were okay without unit testing since our playwright tests were thorough enough. To "unit test" command registration, in our `search-csv.spec.ts` file, we have tests that check for registered commands; if a command was not registered, it cannot be called, and once a command is registered, it is recognized and can be used.
+
 
 # How to run tests
 
