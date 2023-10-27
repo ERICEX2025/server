@@ -5,7 +5,7 @@ import { ControlledInput } from "./ControlledInput";
 import splitSpacesExcludeQuotes from "quoted-string-space-split";
 import { HistoryItem } from "./REPL";
 import { REPLFunction } from "./REPLFunction";
-import { searchcsv, loadcsv, viewcsv } from "./mockedJson";
+import { searchcsv, loadcsv, viewcsv, broadband } from "./mockedJson";
 
 /**
  * REPL Input component is in charge of dealing with everything
@@ -333,17 +333,24 @@ export function REPLInput(props: REPLInputProps) {
         outputMsg = searchcsv(column, value, hasHeader);
       }
     }
+    else if(command === "broadband"){
+      if(args.length === 1){
+        outputMsg = "please enter a state and optional county"
+      }
+      else if (args.length === 2) {
+        outputMsg = broadband(commandArgs[1], "");
+      } else {
+        outputMsg = broadband(commandArgs[1], commandArgs[2]);
+      }
+    }
     else{
       outputMsg =
         "Command " +
         commandString +
         " not recognized, try mock load_file <csv-file-path>, view, search <column> <value> or mode <mode>";
     }
-
     return outputMsg;
-
   };
-
   /**
    * Example function that could be hardcoded by a developer stakeholder
    * to register for their own use.
@@ -369,7 +376,7 @@ export function REPLInput(props: REPLInputProps) {
     ["add2and2", handleAdd2And2],
     ["mock", handleMock], // developer can add their own functions like this
   ]);
-
+  
   /**
    * returns the div for everything input related
    */

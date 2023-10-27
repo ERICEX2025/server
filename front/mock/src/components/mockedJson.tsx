@@ -25,18 +25,15 @@ function setFile(filename: string) {
 }
 
 export const stateToBroadband: Map<string, string[][]> = new Map([
-  //Col: planet, query pluto
   ["Illinois", [["Kankakee County", ": 71.8"], ["Cook County", ": 84.8"], ["Lake County", ": 93.6"], ["DuPage County", "47.5"]]],
-  //query pluto
   ["Rhode Island", [["Providence County", ": 78.8"], ["Kent County", "78.5"]]],
-  //query huge, testing 2 row output
   [
     'Illinois "Cook County"',
     [
       ["Cook County, Illinois", ": 84.8"],
     ],
   ],
-  ["FakeState", [[""]]]
+  ["FakeState", [["does not exist"]]]
 ]);
 
 export const CSVsearchStardataToDataMap: Map<string, string[][]> = new Map([
@@ -197,40 +194,49 @@ export function searchcsv(column: string, value: string, hasHeader: string) {
   if (CSVfile.length !== 0) {
     let data = CSVsearchStardataToDataMap.get(value);
     if (column === "") {
-      if(file === "stardata.csv") {
+      if (file === "stardata.csv") {
         data = CSVsearchStardataToDataMap.get(value);
-      }
-      else if (file === "postsecondary_education.csv") {
+      } else if (file === "postsecondary_education.csv") {
         data = CSVsearchEducationToDataMap.get(value);
-      }
-      else if (file === "income_by_race_edited.csv") {
+      } else if (file === "income_by_race_edited.csv") {
         data = CSVsearchIncomeToDataMap.get(value);
       }
       if (data !== undefined) {
         setSearchOutput(data);
         return searchOutput;
-       }
-     } 
-     else {
-      let data = CSVsearchStardataToDataMap.get(column+ ", " +value);
+      }
+    } else {
+      let data = CSVsearchStardataToDataMap.get(column + ", " + value);
 
-      if(file === "stardata.csv") {
-        data = CSVsearchStardataToDataMap.get(column+ ", " +value);
-      }
-      else if (file === "postsecondary_education.csv") {
-        data = CSVsearchEducationToDataMap.get(column+ ", " +value);
-      }
-      else if (file === "income_by_race_edited.csv") {
-        data = CSVsearchIncomeToDataMap.get(column+ ", " +value);
+      if (file === "stardata.csv") {
+        data = CSVsearchStardataToDataMap.get(column + ", " + value);
+      } else if (file === "postsecondary_education.csv") {
+        data = CSVsearchEducationToDataMap.get(column + ", " + value);
+      } else if (file === "income_by_race_edited.csv") {
+        data = CSVsearchIncomeToDataMap.get(column + ", " + value);
       }
       if (data !== undefined) {
         setSearchOutput(data);
         return searchOutput;
       }
-     }
-     return "cannot find search query " + column + " " + value ;
+    }
+    return "cannot find search query " + column + " " + value;
   } else {
     return "csv file not loaded";
   }
-
 }
+
+// mocked broadband
+  export function broadband(state: string, county: string) {
+    let data;
+    if(county === "Cook County"){
+      data = stateToBroadband.get('Illinois "Cook County"');
+    }
+    else{
+      data = stateToBroadband.get(state);
+    }
+    if(data === undefined){
+      data = "error";
+    }
+    return data
+  }
