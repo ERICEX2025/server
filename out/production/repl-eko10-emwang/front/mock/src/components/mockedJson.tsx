@@ -24,21 +24,6 @@ function setFile(filename: string) {
   file = filename;
 }
 
-export const stateToBroadband: Map<string, string[][]> = new Map([
-  //Col: planet, query pluto
-  ["Illinois", [["Kankakee County", ": 71.8"], ["Cook County", ": 84.8"], ["Lake County", ": 93.6"], ["DuPage County", "47.5"]]],
-  //query pluto
-  ["Rhode Island", [["Providence County", ": 78.8"], ["Kent County", "78.5"]]],
-  //query huge, testing 2 row output
-  [
-    'Illinois "Cook County"',
-    [
-      ["Cook County, Illinois", ": 84.8"],
-    ],
-  ],
-  ["FakeState", [[""]]]
-]);
-
 export const CSVsearchStardataToDataMap: Map<string, string[][]> = new Map([
   //Col: planet, query pluto
   ["Planet, Pluto", [["Pluto", "Tiny", "White"]]],

@@ -1,0 +1,59 @@
+
+.header{
+  color: #f2d8bf;
+  font-size: x-large
+}
+.repl-history {
+  /* white-space: pre-line;
+  width: 60vw;
+  height: 50vh;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  text-align: center; */
+  display: flex; 
+  flex-direction: column; /* stack children vertically */
+  align-items: center; /* center children horizontally */
+  /* width: 60vw; */
+  width: max(60vw, 500px);
+  height: 60vh;
+  padding: 10px;
+  overflow-y: auto;
+  white-space: pre-line;
+  background-color: #d8a25f;
+  color: #f2d8bf;
+  
+}
+.repl-input {
+  background-color: #ac6f38;
+  border: 2px solid #ac6f38;
+}
+.repl-command-box {
+    flex: display;
+    font-size: 34px;
+    background-color: #ac6f38;
+    text-align: center;
+    margin-top: 10px;
+    color: #f2d8bf;
+    border: 1px solid #ac6f38;
+}
+
+fieldset {
+  background-color: #d8a25f;
+  border: 1px solid #ac6f38;
+}
+
+::placeholder {
+  color: #e9c6a3;
+  opacity: 1; /* Firefox */
+}
+/* .table-body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+} */
+
+.submit-button {
+  background-color: #ac6f38;
+  color: #f2d8bf;
+  margin-top: 10px; 
+}

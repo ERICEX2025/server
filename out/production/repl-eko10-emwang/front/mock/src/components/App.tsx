@@ -1,6 +1,6 @@
 import "../styles/App.css";
 import REPL from "./REPL";
-import { useEffect, KeyboardEventHandler } from "react";
+import { KeyboardEventHandler } from "react";
 
 
 
@@ -9,14 +9,15 @@ import { useEffect, KeyboardEventHandler } from "react";
  * @returns the entire application 
  */
 function App() {
-
-  useEffect(()=>{
-    const doc = document.getElementById("app");
-    doc?.focus();
-      console.log("hfjdklf");
-  }, [])
   // upon render, the app is in focus
-  
+  const doc = document.getElementById("app");
+  if (doc == null) {
+    console.log("sadness")
+  }
+  else {
+    doc?.focus();
+    console.log("hfjdklf")
+  }
 
   /**
    * Handles key keyboard shortcuts from the user's keystrokes. The available shortcuts
